@@ -40,7 +40,6 @@
           <Color blue="cc" green="99" red="0" type="rgb"/>
         </Property>
         <Property name="toolTipText" type="java.lang.String" value=""/>
-        <Property name="opaque" type="boolean" value="false"/>
       </Properties>
 
       <Layout>

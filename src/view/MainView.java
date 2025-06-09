@@ -5,6 +5,7 @@
 package view;
 
 import java.awt.BorderLayout;
+import org.jxmapviewer.JXMapViewer;
 import view.components.MapComponent;
 
 /**
@@ -18,13 +19,24 @@ public class MainView extends javax.swing.JFrame {
      */
     public MainView() {
         
-    setLayout(new BorderLayout());  // importante!
-    MapComponent mapComponent = new MapComponent();
-    add(mapComponent.getMap(), BorderLayout.CENTER);
-    
-    setVisible(true);
+        initComponents(); // primeiro cria todos os componentes
 
-    initComponents();
+    // Cria o componente de mapa
+    MapComponent mapComponent = new MapComponent();
+    JXMapViewer map = mapComponent.getMap();
+
+    // Define layout manual para o Background
+    Background.setLayout(new BorderLayout());
+    
+    // Adiciona o menu lateral à esquerda
+    Background.add(jPanel2, BorderLayout.WEST);
+
+    // Adiciona o mapa no centro (resto da tela)
+    Background.add(map, BorderLayout.CENTER);
+
+    pack();
+    setLocationRelativeTo(null); // centraliza na tela
+    setVisible(true);
 
     }
 
@@ -49,7 +61,6 @@ public class MainView extends javax.swing.JFrame {
 
         Background.setBackground(new java.awt.Color(0, 153, 204));
         Background.setToolTipText("");
-        Background.setOpaque(false);
 
         jPanel2.setBackground(new java.awt.Color(255, 255, 255));
 
