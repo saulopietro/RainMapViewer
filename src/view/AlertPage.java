@@ -4,11 +4,34 @@
  */
 package view;
 
+import java.awt.BorderLayout;
+import java.awt.Dimension;
+import java.awt.FlowLayout;
 import java.awt.GridLayout;
+import java.awt.event.MouseAdapter;
+import java.awt.event.MouseEvent;
 import java.text.SimpleDateFormat;
 import java.util.Date;
 import javax.swing.table.DefaultTableModel;
 import javax.swing.*;
+import org.jxmapviewer.JXMapViewer;
+import org.jxmapviewer.OSMTileFactoryInfo;
+import org.jxmapviewer.input.CenterMapListener;
+import org.jxmapviewer.input.PanKeyListener;
+import org.jxmapviewer.input.PanMouseInputListener;
+import org.jxmapviewer.input.ZoomMouseWheelListenerCursor;
+import org.jxmapviewer.painter.CompoundPainter;
+import org.jxmapviewer.painter.Painter;
+import org.jxmapviewer.viewer.DefaultTileFactory;
+import org.jxmapviewer.viewer.GeoPosition;
+import org.jxmapviewer.viewer.TileFactoryInfo;
+import org.jxmapviewer.viewer.Waypoint;
+import org.jxmapviewer.viewer.WaypointPainter;
+import java.awt.geom.Point2D;
+import java.awt.geom.Rectangle2D;
+import java.util.HashSet;
+import java.util.Set;
+import org.jxmapviewer.viewer.DefaultWaypoint;
 
 /**
  *
@@ -35,7 +58,6 @@ public class AlertPage extends javax.swing.JFrame {
         Background = new javax.swing.JPanel();
         jScrollPane1 = new javax.swing.JScrollPane();
         AlertsTable = new javax.swing.JTable();
-        BotaoAlerta = new javax.swing.JButton();
         SideMenuPanel = new javax.swing.JPanel();
         PerfilPanel = new javax.swing.JPanel();
         jLabel2 = new javax.swing.JLabel();
@@ -46,6 +68,10 @@ public class AlertPage extends javax.swing.JFrame {
         MapaPanel = new javax.swing.JPanel();
         jLabel4 = new javax.swing.JLabel();
         jLabel3 = new javax.swing.JLabel();
+        BotaoPanel = new javax.swing.JPanel();
+        BotaoAlerta = new javax.swing.JButton();
+        jPanel1 = new javax.swing.JPanel();
+        jButton1 = new javax.swing.JButton();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
         setTitle("Flood Viewer");
@@ -55,16 +81,16 @@ public class AlertPage extends javax.swing.JFrame {
 
         AlertsTable.setModel(new javax.swing.table.DefaultTableModel(
             new Object [][] {
-                {"Alagamento", "22:30", "Crítico", "Rua 19 de Novembro"},
-                {"Engarrafamento", "17:00", "Médio", "Ponte Estaiada"},
-                {"Alagamento", "15:00", "Baixo", "Avenida Brasil"}
+                {"Alagamento", "22:30", "Crítico", "Rua 19 de Novembro", null, null},
+                {"Engarrafamento", "17:00", "Médio", "Ponte Estaiada", null, null},
+                {"Alagamento", "15:00", "Baixo", "Avenida Brasil", null, null}
             },
             new String [] {
-                "Tipo", "Hora", "Nível", "Local"
+                "Tipo", "Hora", "Nível", "Local", "Latitude", "Longitude"
             }
         ) {
             Class[] types = new Class [] {
-                java.lang.String.class, java.lang.String.class, java.lang.String.class, java.lang.String.class
+                java.lang.String.class, java.lang.String.class, java.lang.String.class, java.lang.String.class, java.lang.String.class, java.lang.String.class
             };
 
             public Class getColumnClass(int columnIndex) {
@@ -72,17 +98,6 @@ public class AlertPage extends javax.swing.JFrame {
             }
         });
         jScrollPane1.setViewportView(AlertsTable);
-
-        BotaoAlerta.setFont(new java.awt.Font("Arial", 0, 18)); // NOI18N
-        BotaoAlerta.setText("Adicionar Alerta");
-        BotaoAlerta.setBorder(null);
-        BotaoAlerta.setBorderPainted(false);
-        BotaoAlerta.setCursor(new java.awt.Cursor(java.awt.Cursor.DEFAULT_CURSOR));
-        BotaoAlerta.addActionListener(new java.awt.event.ActionListener() {
-            public void actionPerformed(java.awt.event.ActionEvent evt) {
-                BotaoAlertaActionPerformed(evt);
-            }
-        });
 
         SideMenuPanel.setBackground(new java.awt.Color(255, 255, 255));
         SideMenuPanel.setPreferredSize(new java.awt.Dimension(200, 300));
@@ -173,30 +188,55 @@ public class AlertPage extends javax.swing.JFrame {
                 .addComponent(PerfilPanel, javax.swing.GroupLayout.PREFERRED_SIZE, 74, javax.swing.GroupLayout.PREFERRED_SIZE))
         );
 
+        BotaoPanel.setLayout(new java.awt.BorderLayout());
+
+        BotaoAlerta.setFont(new java.awt.Font("Arial", 0, 18)); // NOI18N
+        BotaoAlerta.setText("Adicionar Alerta");
+        BotaoAlerta.setBorder(null);
+        BotaoAlerta.setBorderPainted(false);
+        BotaoAlerta.setCursor(new java.awt.Cursor(java.awt.Cursor.DEFAULT_CURSOR));
+        BotaoAlerta.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                BotaoAlertaActionPerformed(evt);
+            }
+        });
+        BotaoPanel.add(BotaoAlerta, java.awt.BorderLayout.CENTER);
+
+        jPanel1.setLayout(new java.awt.BorderLayout());
+
+        jButton1.setText("Excluir");
+        jButton1.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                jButton1ActionPerformed(evt);
+            }
+        });
+        jPanel1.add(jButton1, java.awt.BorderLayout.CENTER);
+
         javax.swing.GroupLayout BackgroundLayout = new javax.swing.GroupLayout(Background);
         Background.setLayout(BackgroundLayout);
         BackgroundLayout.setHorizontalGroup(
             BackgroundLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(BackgroundLayout.createSequentialGroup()
                 .addComponent(SideMenuPanel, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
                 .addGroup(BackgroundLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                     .addGroup(BackgroundLayout.createSequentialGroup()
-                        .addGap(310, 310, 310)
-                        .addComponent(BotaoAlerta)
-                        .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
-                    .addGroup(BackgroundLayout.createSequentialGroup()
-                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 76, Short.MAX_VALUE)
-                        .addComponent(jScrollPane1, javax.swing.GroupLayout.PREFERRED_SIZE, 651, javax.swing.GroupLayout.PREFERRED_SIZE)
-                        .addGap(73, 73, 73))))
+                        .addGap(343, 343, 343)
+                        .addComponent(BotaoPanel, javax.swing.GroupLayout.PREFERRED_SIZE, 157, javax.swing.GroupLayout.PREFERRED_SIZE))
+                    .addComponent(jScrollPane1, javax.swing.GroupLayout.PREFERRED_SIZE, 776, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addComponent(jPanel1, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
+                .addContainerGap(12, Short.MAX_VALUE))
         );
         BackgroundLayout.setVerticalGroup(
             BackgroundLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, BackgroundLayout.createSequentialGroup()
-                .addGap(50, 50, 50)
-                .addComponent(BotaoAlerta)
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 106, Short.MAX_VALUE)
-                .addComponent(jScrollPane1, javax.swing.GroupLayout.PREFERRED_SIZE, 363, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addGap(59, 59, 59))
+                .addGap(55, 55, 55)
+                .addComponent(BotaoPanel, javax.swing.GroupLayout.PREFERRED_SIZE, 48, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 35, Short.MAX_VALUE)
+                .addComponent(jPanel1, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                .addComponent(jScrollPane1, javax.swing.GroupLayout.PREFERRED_SIZE, 403, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addGap(30, 30, 30))
             .addComponent(SideMenuPanel, javax.swing.GroupLayout.DEFAULT_SIZE, 600, Short.MAX_VALUE)
         );
 
@@ -213,81 +253,6 @@ public class AlertPage extends javax.swing.JFrame {
 
         pack();
     }// </editor-fold>//GEN-END:initComponents
-
-    private void BotaoAlertaActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_BotaoAlertaActionPerformed
-JDialog dialog = new JDialog(this, "Novo Alerta", true);
-dialog.setLayout(new GridLayout(5, 2, 10, 10));
-
-// Tipos de ocorrências em ruas
-String[] tiposOcorrencias = {
-    "Engarrafamento", 
-    "Alagamento", 
-    "Acidente", 
-    "Obra na pista", 
-    "Bloqueio", 
-    "Manifestação", 
-    "Queda de árvore", 
-    "Deslizamento", 
-    "Falta de iluminação", 
-    "Buraco na via"
-};
-
-// Níveis de urgência
-String[] niveisUrgencia = {
-    "Crítico - Interdição total",
-    "Alto - Tráfego lento", 
-    "Médio - Possível atraso", 
-    "Baixo - Tráfego normal"
-};
-
-// Componentes
-JComboBox<String> tipoField = new JComboBox<>(tiposOcorrencias);
-JSpinner horaField = new JSpinner(new SpinnerDateModel());
-JComboBox<String> nivelField = new JComboBox<>(niveisUrgencia);
-JTextField localField = new JTextField();
-JButton saveButton = new JButton("Salvar");
-
-// Configuração do Spinner de hora
-JSpinner.DateEditor editor = new JSpinner.DateEditor(horaField, "HH:mm");
-horaField.setEditor(editor);
-horaField.setValue(new Date()); // Hora atual como padrão
-
-saveButton.addActionListener(e -> {
-    String tipo = (String) tipoField.getSelectedItem();
-    Date hora = (Date) horaField.getValue();
-    String nivel = (String) nivelField.getSelectedItem();
-    String local = localField.getText();
-    
-    if (!local.isEmpty()) {
-        // Formata a hora para string
-        SimpleDateFormat sdf = new SimpleDateFormat("HH:mm");
-        String horaFormatada = sdf.format(hora);
-        
-        DefaultTableModel model = (DefaultTableModel) AlertsTable.getModel();
-        model.addRow(new Object[]{tipo, horaFormatada, nivel, local});
-        dialog.dispose();
-    } else {
-        JOptionPane.showMessageDialog(dialog, "Informe o local do ocorrido!");
-    }
-});
-
-// Adicionando componentes ao dialog
-dialog.add(new JLabel("Tipo de ocorrência:"));
-dialog.add(tipoField);
-dialog.add(new JLabel("Hora:"));
-dialog.add(horaField);
-dialog.add(new JLabel("Nível de urgência:"));
-dialog.add(nivelField);
-dialog.add(new JLabel("Local (rua/avenida):"));
-dialog.add(localField);
-dialog.add(new JLabel());
-dialog.add(saveButton);
-
-dialog.pack();
-dialog.setSize(400, 250);
-dialog.setLocationRelativeTo(this);
-dialog.setVisible(true);
-    }//GEN-LAST:event_BotaoAlertaActionPerformed
 
     private void PerfilPanelMouseEntered(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_PerfilPanelMouseEntered
         PerfilPanel.setBackground(SideMenuPanel.getBackground().darker());
@@ -312,6 +277,178 @@ dialog.setVisible(true);
     private void MapaPanelMouseExited(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_MapaPanelMouseExited
         MapaPanel.setBackground(SideMenuPanel.getBackground().brighter());
     }//GEN-LAST:event_MapaPanelMouseExited
+
+    private void BotaoAlertaActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_BotaoAlertaActionPerformed
+            JDialog dialog = new JDialog(this, "Novo Alerta", true);
+    dialog.setLayout(new BorderLayout(10, 10));
+
+    // Usando array para contornar a restrição de variável final
+    final GeoPosition[] selectedPosition = {null};
+
+    // Painel de formulário
+    JPanel formPanel = new JPanel(new GridLayout(4, 2, 10, 10));
+    
+    // Tipos de ocorrências
+    String[] tiposOcorrencias = {
+        "Engarrafamento", "Alagamento", "Acidente", 
+        "Obra na pista", "Bloqueio", "Manifestação"
+    };
+    
+    // Níveis de urgência
+    String[] niveisUrgencia = {
+        "Crítico - Interdição total",
+        "Alto - Tráfego lento", 
+        "Médio - Possível atraso", 
+        "Baixo - Tráfego normal"
+    };
+    
+    // Componentes do formulário
+    JComboBox<String> tipoField = new JComboBox<>(tiposOcorrencias);
+    JSpinner horaField = new JSpinner(new SpinnerDateModel());
+    JComboBox<String> nivelField = new JComboBox<>(niveisUrgencia);
+    
+    // Configuração do spinner de hora
+    JSpinner.DateEditor timeEditor = new JSpinner.DateEditor(horaField, "HH:mm");
+    horaField.setEditor(timeEditor);
+    horaField.setValue(new Date());
+
+    // Componentes para seleção de localização
+    JButton selectLocationBtn = new JButton("Selecionar no mapa");
+    JLabel locationLabel = new JLabel("Nenhum local selecionado");
+    locationLabel.setBorder(BorderFactory.createEtchedBorder());
+
+    // Configuração do mapa
+    JXMapViewer mapViewer = new JXMapViewer();
+    mapViewer.setZoom(12);
+    
+    // Usando OpenStreetMap
+    TileFactoryInfo info = new OSMTileFactoryInfo();
+    DefaultTileFactory tileFactory = new DefaultTileFactory(info);
+    mapViewer.setTileFactory(tileFactory);
+    
+    // Centraliza em uma localização inicial (ex: São Paulo)
+    mapViewer.setAddressLocation(new GeoPosition(-23.5505, -46.6333));
+
+    // Configura controles de navegação do mapa
+    PanMouseInputListener panListener = new PanMouseInputListener(mapViewer);
+    mapViewer.addMouseListener(panListener);
+    mapViewer.addMouseMotionListener(panListener);
+    mapViewer.addMouseWheelListener(new ZoomMouseWheelListenerCursor(mapViewer));
+    mapViewer.addKeyListener(new PanKeyListener(mapViewer));
+
+    // Painel do mapa (inicialmente oculto)
+    JPanel mapPanel = new JPanel(new BorderLayout());
+    mapPanel.add(mapViewer, BorderLayout.CENTER);
+    mapPanel.setPreferredSize(new Dimension(600, 400));
+    mapPanel.setVisible(false);
+    
+    // Botão para confirmar localização
+    JButton confirmLocationBtn = new JButton("Confirmar Localização");
+    confirmLocationBtn.setVisible(false);
+
+    // Ação do botão de seleção no mapa
+    selectLocationBtn.addActionListener(e -> {
+        formPanel.setVisible(false);
+        mapPanel.setVisible(true);
+        confirmLocationBtn.setVisible(true);
+        dialog.pack();
+    });
+
+    // Listener para clique no mapa
+    mapViewer.addMouseListener(new MouseAdapter() {
+        @Override
+        public void mouseClicked(MouseEvent e) {
+            Point2D clickPoint = e.getPoint();
+            Rectangle2D viewportBounds = mapViewer.getViewportBounds();
+            
+            double x = viewportBounds.getX() + clickPoint.getX();
+            double y = viewportBounds.getY() + clickPoint.getY();
+            
+            selectedPosition[0] = mapViewer.getTileFactory().pixelToGeo(
+                new Point2D.Double(x, y), 
+                mapViewer.getZoom()
+            );
+            
+            // Adiciona marcador no local selecionado
+            Set<Waypoint> waypoints = new HashSet<>();
+            waypoints.add(new DefaultWaypoint(selectedPosition[0]));
+            
+            WaypointPainter<Waypoint> waypointPainter = new WaypointPainter<>();
+            waypointPainter.setWaypoints(waypoints);
+            mapViewer.setOverlayPainter(waypointPainter);
+            
+            mapViewer.repaint();
+        }
+    });
+
+    // Ação do botão de confirmar localização
+    confirmLocationBtn.addActionListener(e -> {
+        if (selectedPosition[0] != null) {
+            locationLabel.setText(String.format("Lat: %.4f, Long: %.4f", 
+                selectedPosition[0].getLatitude(), 
+                selectedPosition[0].getLongitude()));
+        }
+        mapPanel.setVisible(false);
+        formPanel.setVisible(true);
+        confirmLocationBtn.setVisible(false);
+        dialog.pack();
+    });
+
+    // Botão de salvar
+    JButton saveButton = new JButton("Salvar");
+    saveButton.addActionListener(e -> {
+        if (selectedPosition[0] == null) {
+            JOptionPane.showMessageDialog(dialog, "Selecione um local no mapa!");
+            return;
+        }
+        
+        String tipo = (String) tipoField.getSelectedItem();
+        Date hora = (Date) horaField.getValue();
+        String nivel = (String) nivelField.getSelectedItem();
+        
+        SimpleDateFormat sdf = new SimpleDateFormat("HH:mm");
+        String horaFormatada = sdf.format(hora);
+        
+        String localizacao = String.format("%.4f, %.4f", 
+            selectedPosition[0].getLatitude(), 
+            selectedPosition[0].getLongitude());
+        
+        DefaultTableModel model = (DefaultTableModel) AlertsTable.getModel();
+        model.addRow(new Object[]{tipo, horaFormatada, nivel, localizacao});
+        dialog.dispose();
+    });
+
+    // Adicionando componentes ao formulário
+    formPanel.add(new JLabel("Tipo de ocorrência:"));
+    formPanel.add(tipoField);
+    formPanel.add(new JLabel("Hora:"));
+    formPanel.add(horaField);
+    formPanel.add(new JLabel("Nível de urgência:"));
+    formPanel.add(nivelField);
+    formPanel.add(new JLabel("Localização:"));
+    formPanel.add(selectLocationBtn);
+    formPanel.add(new JLabel("Local selecionado:"));
+    formPanel.add(locationLabel);
+
+    // Painel de botões
+    JPanel buttonPanel = new JPanel(new FlowLayout(FlowLayout.RIGHT));
+    buttonPanel.add(saveButton);
+
+    // Adicionando tudo ao diálogo
+    dialog.add(formPanel, BorderLayout.NORTH);
+    dialog.add(mapPanel, BorderLayout.CENTER);
+    dialog.add(confirmLocationBtn, BorderLayout.SOUTH);
+    dialog.add(buttonPanel, BorderLayout.PAGE_END);
+
+    dialog.pack();
+    dialog.setSize(600, 500);
+    dialog.setLocationRelativeTo(this);
+    dialog.setVisible(true);
+    }//GEN-LAST:event_BotaoAlertaActionPerformed
+
+    private void jButton1ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton1ActionPerformed
+        // TODO add your handling code here:
+    }//GEN-LAST:event_jButton1ActionPerformed
 
     /**
      * @param args the command line arguments
@@ -354,15 +491,18 @@ dialog.setVisible(true);
     private javax.swing.JTable AlertsTable;
     private javax.swing.JPanel Background;
     private javax.swing.JButton BotaoAlerta;
+    private javax.swing.JPanel BotaoPanel;
     private javax.swing.JPanel MapaPanel;
     private javax.swing.JPanel PerfilPanel;
     private javax.swing.JPanel SideMenuPanel;
+    private javax.swing.JButton jButton1;
     private javax.swing.JLabel jLabel2;
     private javax.swing.JLabel jLabel3;
     private javax.swing.JLabel jLabel4;
     private javax.swing.JLabel jLabel5;
     private javax.swing.JLabel jLabel6;
     private javax.swing.JLabel jLabel7;
+    private javax.swing.JPanel jPanel1;
     private javax.swing.JScrollPane jScrollPane1;
     // End of variables declaration//GEN-END:variables
 }
