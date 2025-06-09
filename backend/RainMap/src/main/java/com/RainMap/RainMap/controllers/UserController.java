@@ -1,8 +1,10 @@
 package com.RainMap.RainMap.controllers;
 
 import com.RainMap.RainMap.dto.UserDTO;
+import com.RainMap.RainMap.models.User;
 import com.RainMap.RainMap.services.UserService;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.servlet.support.ServletUriComponentsBuilder;
@@ -33,5 +35,16 @@ public class UserController {
     public ResponseEntity<List<UserDTO>> findAll() {
         List<UserDTO> users = service.findAll();
         return ResponseEntity.ok().body(users);
+    }
+
+    @GetMapping
+    public ResponseEntity<String> findOne(@RequestParam String email, String password) {
+        UserDTO userDTO = service.findOne(email);
+
+        if(userDTO.getPassword().matches(password)) {
+            return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body("Credenciais inválidas");
+        }
+        
+        return ResponseEntity.status(HttpStatus.ACCEPTED).body("Entrou");
     }
 }

@@ -27,4 +27,9 @@ public class UserService {
 
         return repository.findAll().stream().map(UserDTO::new).toList();
     }
+
+    public UserDTO findOne(String email) {
+        User user = repository.findOne(email);
+        return new UserDTO(user);
+    }
 }
