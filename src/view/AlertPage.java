@@ -195,7 +195,7 @@ public class AlertPage extends JFrame {
         jLabel1.setFont(new java.awt.Font("Segoe UI", 1, 36)); // NOI18N
         jLabel1.setText("Alertas");
 
-        jButton2.setBackground(new java.awt.Color(204, 0, 0));
+        jButton2.setBackground(new java.awt.Color(255, 0, 0));
         jButton2.setFont(new java.awt.Font("Segoe UI", 1, 12)); // NOI18N
         jButton2.setIcon(new javax.swing.ImageIcon(getClass().getResource("/img/X--Streamline-Feather.png"))); // NOI18N
         jButton2.setText("Excluir Alerta");
