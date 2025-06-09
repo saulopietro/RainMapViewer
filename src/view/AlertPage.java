@@ -5,6 +5,8 @@
 package view;
 
 import java.awt.GridLayout;
+import java.text.SimpleDateFormat;
+import java.util.Date;
 import javax.swing.table.DefaultTableModel;
 import javax.swing.*;
 
@@ -166,7 +168,7 @@ public class AlertPage extends javax.swing.JFrame {
         });
         jScrollPane1.setViewportView(AlertsTable);
 
-        BotaoAlerta.setFont(new java.awt.Font("Segoe UI", 0, 24)); // NOI18N
+        BotaoAlerta.setFont(new java.awt.Font("Arial", 1, 20)); // NOI18N
         BotaoAlerta.setText("Adicionar Alerta");
         BotaoAlerta.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
@@ -180,22 +182,23 @@ public class AlertPage extends javax.swing.JFrame {
             BackgroundLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(BackgroundLayout.createSequentialGroup()
                 .addComponent(jPanel2, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 78, Short.MAX_VALUE)
                 .addGroup(BackgroundLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, BackgroundLayout.createSequentialGroup()
+                    .addGroup(BackgroundLayout.createSequentialGroup()
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 78, Short.MAX_VALUE)
                         .addComponent(jScrollPane1, javax.swing.GroupLayout.PREFERRED_SIZE, 651, javax.swing.GroupLayout.PREFERRED_SIZE)
                         .addGap(71, 71, 71))
-                    .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, BackgroundLayout.createSequentialGroup()
+                    .addGroup(BackgroundLayout.createSequentialGroup()
+                        .addGap(310, 310, 310)
                         .addComponent(BotaoAlerta)
-                        .addGap(296, 296, 296))))
+                        .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))))
         );
         BackgroundLayout.setVerticalGroup(
             BackgroundLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addComponent(jPanel2, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
             .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, BackgroundLayout.createSequentialGroup()
-                .addGap(38, 38, 38)
+                .addGap(50, 50, 50)
                 .addComponent(BotaoAlerta)
-                .addGap(46, 46, 46)
+                .addGap(32, 32, 32)
                 .addComponent(jScrollPane1, javax.swing.GroupLayout.PREFERRED_SIZE, 363, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
         );
@@ -248,39 +251,78 @@ public class AlertPage extends javax.swing.JFrame {
     }//GEN-LAST:event_jLabel3MouseExited
 
     private void BotaoAlertaActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_BotaoAlertaActionPerformed
-        JDialog dialog = new JDialog(this, "Novo Alerta", true);
-        dialog.setLayout(new GridLayout(3, 2, 10, 10));
+JDialog dialog = new JDialog(this, "Novo Alerta", true);
+dialog.setLayout(new GridLayout(5, 2, 10, 10));
 
-        JTextField idField = new JTextField();
-        JTextField descField = new JTextField();
-        JButton saveButton = new JButton("Salvar");
+// Tipos de ocorrências em ruas
+String[] tiposOcorrencias = {
+    "Engarrafamento", 
+    "Alagamento", 
+    "Acidente", 
+    "Obra na pista", 
+    "Bloqueio", 
+    "Manifestação", 
+    "Queda de árvore", 
+    "Deslizamento", 
+    "Falta de iluminação", 
+    "Buraco na via"
+};
 
-        saveButton.addActionListener(e -> {
-            String id = idField.getText();
-            String desc = descField.getText();
-            if (!id.isEmpty() && !desc.isEmpty()) {
-                DefaultTableModel model = (DefaultTableModel) AlertsTable.getModel(); // ou tableAlerts
-                model.addRow(new Object[]{id, desc});
-                dialog.dispose();
-            } else {
-                JOptionPane.showMessageDialog(dialog, "Preencha todos os campos!");
-            }
-        });
+// Níveis de urgência
+String[] niveisUrgencia = {
+    "Crítico - Interdição total",
+    "Alto - Tráfego lento", 
+    "Médio - Possível atraso", 
+    "Baixo - Tráfego normal"
+};
 
-        dialog.add(new JLabel("Tipo:"));
-        dialog.add(idField);
-        dialog.add(new JLabel("Hora:"));
-        dialog.add(descField);
-        dialog.add(new JLabel("Nível:"));
-        dialog.add(descField);
-        dialog.add(new JLabel("Local:"));
-        dialog.add(descField);
-        dialog.add(new JLabel());
-        dialog.add(saveButton);
+// Componentes
+JComboBox<String> tipoField = new JComboBox<>(tiposOcorrencias);
+JSpinner horaField = new JSpinner(new SpinnerDateModel());
+JComboBox<String> nivelField = new JComboBox<>(niveisUrgencia);
+JTextField localField = new JTextField();
+JButton saveButton = new JButton("Salvar");
 
-        dialog.setSize(300, 150);
-        dialog.setLocationRelativeTo(this);
-        dialog.setVisible(true);
+// Configuração do Spinner de hora
+JSpinner.DateEditor editor = new JSpinner.DateEditor(horaField, "HH:mm");
+horaField.setEditor(editor);
+horaField.setValue(new Date()); // Hora atual como padrão
+
+saveButton.addActionListener(e -> {
+    String tipo = (String) tipoField.getSelectedItem();
+    Date hora = (Date) horaField.getValue();
+    String nivel = (String) nivelField.getSelectedItem();
+    String local = localField.getText();
+    
+    if (!local.isEmpty()) {
+        // Formata a hora para string
+        SimpleDateFormat sdf = new SimpleDateFormat("HH:mm");
+        String horaFormatada = sdf.format(hora);
+        
+        DefaultTableModel model = (DefaultTableModel) AlertsTable.getModel();
+        model.addRow(new Object[]{tipo, horaFormatada, nivel, local});
+        dialog.dispose();
+    } else {
+        JOptionPane.showMessageDialog(dialog, "Informe o local do ocorrido!");
+    }
+});
+
+// Adicionando componentes ao dialog
+dialog.add(new JLabel("Tipo de ocorrência:"));
+dialog.add(tipoField);
+dialog.add(new JLabel("Hora:"));
+dialog.add(horaField);
+dialog.add(new JLabel("Nível de urgência:"));
+dialog.add(nivelField);
+dialog.add(new JLabel("Local (rua/avenida):"));
+dialog.add(localField);
+dialog.add(new JLabel());
+dialog.add(saveButton);
+
+dialog.pack();
+dialog.setSize(400, 250);
+dialog.setLocationRelativeTo(this);
+dialog.setVisible(true);
     }//GEN-LAST:event_BotaoAlertaActionPerformed
 
     /**
