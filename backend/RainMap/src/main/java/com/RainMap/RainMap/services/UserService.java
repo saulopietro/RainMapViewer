@@ -3,10 +3,12 @@ package com.RainMap.RainMap.services;
 import com.RainMap.RainMap.dto.UserDTO;
 import com.RainMap.RainMap.models.User;
 import com.RainMap.RainMap.repositories.UserRepository;
+import com.RainMap.RainMap.services.exceptions.UserNotFoundException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
+import java.util.Optional;
 
 @Service
 public class UserService {
@@ -29,7 +31,10 @@ public class UserService {
     }
 
     public UserDTO findOne(String email) {
-        User user = repository.findOne(email);
-        return new UserDTO(user);
+        Optional<User> user = repository.findByEmail(email);
+        if (user.isPresent()) {
+            return new UserDTO(user);
+        }
+        throw new UserNotFoundException("Email não encontrado");
     }
 }

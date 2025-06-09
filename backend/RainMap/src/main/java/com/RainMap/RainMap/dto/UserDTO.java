@@ -4,6 +4,8 @@ import com.RainMap.RainMap.models.Address;
 import com.RainMap.RainMap.models.User;
 import jakarta.persistence.OneToOne;
 
+import java.util.Optional;
+
 public class UserDTO {
 
     private Long id;
@@ -29,6 +31,15 @@ public class UserDTO {
         lastname = user.getLastname();
         email = user.getEmail();
         password = user.getPassword();
+    }
+
+    public UserDTO(Optional<User> user) {
+
+        id = user.get().getId();
+        name = user.get().getName();
+        lastname = user.get().getLastname();
+        email = user.get().getEmail();
+        password = user.get().getPassword();
     }
 
     public Long getId() {

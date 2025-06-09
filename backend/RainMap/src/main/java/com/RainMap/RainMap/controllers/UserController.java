@@ -44,7 +44,7 @@ public class UserController {
         if(userDTO.getPassword().matches(password)) {
             return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body("Credenciais inválidas");
         }
-        
+
         return ResponseEntity.status(HttpStatus.ACCEPTED).body("Entrou");
     }
 }
