@@ -1,98 +1,137 @@
-/*
- * Click nbfs://nbhost/SystemFileSystem/Templates/Licenses/license-default.txt to change this license
- * Click nbfs://nbhost/SystemFileSystem/Templates/Classes/Class.java to edit this template
- */
 package view.components;
 
-/**
- *
- * @author saulo
- */
 import javax.swing.*;
 import java.awt.*;
 import java.awt.event.*;
 
 public class SideMenuComponent extends JPanel {
 
-    private JPanel jPanel1;
-    private JPanel jPanel4;
-    private JPanel jPanel5;
-    private JLabel jLabel2;
-    private JLabel jLabel3;
-    private JLabel jLabel4;
-    private JLabel jLabel5;
-    private JLabel jLabel6;
-    private JLabel jLabel7;
+    private JLabel lblMapa;
+    private JLabel lblAlertas;
+    private JLabel lblPerfil;
 
     public SideMenuComponent() {
         initComponents();
     }
 
     private void initComponents() {
-        setBackground(Color.WHITE);
-        setPreferredSize(new Dimension(200, 600)); // largura padrão
-        setLayout(new BoxLayout(this, BoxLayout.Y_AXIS));
+        setBackground(new Color(245, 245, 245));
+        setPreferredSize(new Dimension(220, 600));
+        setLayout(new BorderLayout());
 
-        jPanel1 = criarItemMenu("/img/CfCqj5bgJAGChpNqi7Ii4AYBEmPXtUjQ6JqQHfRQgKDRQ2wOhQACCCCAgNcECBpW1DhPbFaosk8EEEAAAQcKWBM0EPrwKZAkRFwlwC3IXfVJ2fjXAFrgoZzPSg5AggggAACCJgo8FyYtMDl4b6IQAAAABJRU5ErkJggg.png", "Mapa", jLabel3 = new JLabel());
-        jPanel4 = criarItemMenu("/img/w9FOGLn501GZgAAAABJRU5ErkJggg.png", "Alertas", jLabel5 = new JLabel());
-        jPanel5 = criarItemMenu("/img/wdffTCL6rzidQAAAABJRU5ErkJggg.png", "Perfil", jLabel2 = new JLabel());
+        // Painel superior com foto + nome
+        JPanel topPanel = new JPanel();
+        topPanel.setLayout(new BoxLayout(topPanel, BoxLayout.Y_AXIS));
+        topPanel.setBackground(new Color(245, 245, 245));
+        topPanel.setBorder(BorderFactory.createEmptyBorder(20, 0, 10, 0));
 
-        add(Box.createVerticalStrut(175));
-        add(jPanel1);
-        add(Box.createVerticalStrut(6));
-        add(jPanel4);
-        add(Box.createVerticalStrut(6));
-        add(jPanel5);
-        add(Box.createVerticalGlue());
+        JLabel photoLabel;
+        try {
+            photoLabel = new JLabel(new ImageIcon(getClass().getResource("/img/output-onlinepngtools (2).png")));
+        } catch (NullPointerException e) {
+            photoLabel = new JLabel("🧑"); // fallback
+            photoLabel.setFont(new Font("SansSerif", Font.PLAIN, 40));
+            photoLabel.setAlignmentX(Component.CENTER_ALIGNMENT);
+        }
+
+        JLabel nameLabel = new JLabel("Avatar");
+        nameLabel.setFont(new Font("Segoe UI", Font.BOLD, 16));
+        nameLabel.setAlignmentX(Component.CENTER_ALIGNMENT);
+        nameLabel.setBorder(BorderFactory.createEmptyBorder(10, 0, 0, 0));
+
+        topPanel.add(photoLabel);
+        topPanel.add(nameLabel);
+
+        // Painel central com botões
+        Box centerBox = Box.createVerticalBox();
+
+        lblMapa = new JLabel();
+        lblAlertas = new JLabel();
+        lblPerfil = new JLabel();
+
+        JPanel panelMapa = criarItemMenu("/img/mapa.png", "Mapa", lblMapa);
+        JPanel panelAlertas = criarItemMenu("/img/alertas.png", "Alertas", lblAlertas);
+        JPanel panelPerfil = criarItemMenu("/img/perfil.png", "Perfil", lblPerfil);
+
+        centerBox.add(Box.createVerticalGlue());
+        centerBox.add(panelMapa);
+        centerBox.add(Box.createVerticalStrut(15));
+        centerBox.add(panelAlertas);
+        centerBox.add(Box.createVerticalStrut(15));
+        centerBox.add(panelPerfil);
+        centerBox.add(Box.createVerticalGlue());
+
+        // Adiciona os painéis ao layout principal
+        add(topPanel, BorderLayout.NORTH);
+        add(centerBox, BorderLayout.CENTER);
     }
 
     private JPanel criarItemMenu(String iconPath, String labelText, JLabel labelRef) {
-        JPanel panel = new JPanel();
-        panel.setPreferredSize(new Dimension(200, 74));
-        panel.setBackground(Color.WHITE);
-        panel.setLayout(null); // Layout absoluto
+        JPanel panel = new JPanel() {
+            @Override
+            protected void paintComponent(Graphics g) {
+                super.paintComponent(g);
+                setOpaque(false);
+                Graphics2D g2 = (Graphics2D) g.create();
+                g2.setRenderingHint(RenderingHints.KEY_ANTIALIASING, RenderingHints.VALUE_ANTIALIAS_ON);
+                g2.setColor(getBackground());
+                g2.fillRoundRect(0, 0, getWidth(), getHeight(), 15, 15);
+                g2.dispose();
+            }
+        };
 
-        JLabel iconLabel = new JLabel(new ImageIcon(getClass().getResource(iconPath)));
-        iconLabel.setBounds(30, 20, 32, 32);
-        panel.add(iconLabel);
+        panel.setBackground(new Color(230, 230, 230));
+        panel.setMaximumSize(new Dimension(180, 50));
+        panel.setLayout(new FlowLayout(FlowLayout.CENTER, 10, 10));
+
+        JLabel iconLabel;
+        try {
+            iconLabel = new JLabel(new ImageIcon(getClass().getResource(iconPath)));
+        } catch (NullPointerException e) {
+            iconLabel = new JLabel("❌");
+        }
 
         labelRef.setText(labelText);
-        labelRef.setFont(new Font("Segoe UI", Font.PLAIN, 24));
-        labelRef.setBounds(90, 20, 100, 30);
-        panel.add(labelRef);
+        labelRef.setFont(new Font("Segoe UI", Font.BOLD, 16));
+        labelRef.setForeground(Color.DARK_GRAY);
 
-        // Hover effects
+        panel.add(iconLabel);
+        panel.add(labelRef);
+        panel.setCursor(Cursor.getPredefinedCursor(Cursor.HAND_CURSOR));
+
+        // Hover effect
         panel.addMouseListener(new MouseAdapter() {
             @Override
             public void mouseEntered(MouseEvent evt) {
-                panel.setBackground(new Color(230, 230, 230));
+                panel.setBackground(new Color(210, 210, 210));
+                panel.repaint();
             }
+
             @Override
             public void mouseExited(MouseEvent evt) {
-                panel.setBackground(Color.WHITE);
+                panel.setBackground(new Color(230, 230, 230));
+                panel.repaint();
             }
         });
 
         return panel;
     }
 
-    // Getter para ajustar visibilidade/textos se necessário
     public JLabel getMapaLabel() {
-        return jLabel3;
+        return lblMapa;
     }
 
     public JLabel getAlertasLabel() {
-        return jLabel5;
+        return lblAlertas;
     }
 
     public JLabel getPerfilLabel() {
-        return jLabel2;
+        return lblPerfil;
     }
 
     public void setLabelsVisible(boolean visible) {
-        jLabel2.setVisible(visible);
-        jLabel3.setVisible(visible);
-        jLabel5.setVisible(visible);
+        lblMapa.setVisible(visible);
+        lblAlertas.setVisible(visible);
+        lblPerfil.setVisible(visible);
     }
 }
-
