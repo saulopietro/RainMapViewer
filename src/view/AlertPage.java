@@ -9,6 +9,7 @@ import java.awt.BorderLayout;
 import java.awt.CardLayout;
 import java.awt.Color;
 import java.awt.Component;
+import java.awt.Dimension;
 import java.awt.FlowLayout;
 import java.awt.Graphics2D;
 import java.awt.GridLayout;
@@ -19,21 +20,19 @@ import java.awt.geom.Rectangle2D;
 import java.io.IOException;
 import java.net.HttpURLConnection;
 import java.net.URL;
-import java.net.URLEncoder;
 import java.util.Date;
 import java.util.Scanner;
 import java.util.Set;
 import org.jxmapviewer.JXMapViewer;
-import org.jxmapviewer.OSMTileFactoryInfo;
-import org.jxmapviewer.input.PanMouseInputListener;
-import org.jxmapviewer.input.ZoomMouseWheelListenerCursor;
-import org.jxmapviewer.viewer.DefaultTileFactory;
 import org.jxmapviewer.viewer.DefaultWaypoint;
 import org.jxmapviewer.viewer.GeoPosition;
 import org.jxmapviewer.viewer.Waypoint;
 import org.jxmapviewer.viewer.WaypointPainter;
 import javax.swing.table.DefaultTableModel;
 import java.text.SimpleDateFormat;
+import java.util.ArrayList;
+import java.util.HashSet;
+import java.util.List;
 import java.util.Locale;
 import org.json.JSONException;
 import org.json.JSONObject;
@@ -287,6 +286,9 @@ public class AlertPage extends JFrame {
     private void BotaoAlertaActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_BotaoAlertaActionPerformed
     JDialog dialog = new JDialog((JFrame) SwingUtilities.getWindowAncestor((Component) evt.getSource()), "Novo Alerta", true);
     dialog.setLayout(new BorderLayout(10, 10));
+    dialog.setSize(800, 600);
+    dialog.setResizable(false);
+    dialog.setLocationRelativeTo(null);
 
     final GeoPosition[] selectedPos = {null};
     final String[] enderecoCompleto = {""};
@@ -308,12 +310,10 @@ public class AlertPage extends JFrame {
     formPanel.add(new JLabel("Nível:")); formPanel.add(nivelField);
     formPanel.add(selectMapBtn); formPanel.add(locationLabel);
 
-    // Usa seu MapComponent
     MapComponent mapComponent = new MapComponent();
     JXMapViewer mapViewer = mapComponent.getMap();
 
-    // Define zoom inicial e localização padrão
-    mapViewer.setZoom(16);
+    mapViewer.setZoom(7);
     try {
         GeoPosition current = getCurrentLocationFromIP();
         mapViewer.setAddressLocation(current != null ? current : new GeoPosition(-23.5505, -46.6333));
@@ -335,10 +335,9 @@ public class AlertPage extends JFrame {
     selectMapBtn.addActionListener(e -> {
         cl.show(cards, "MAP");
         dialog.pack();
-        dialog.setSize(650, 500);
+        dialog.setSize(800, 600);
     });
 
-    // Listener para clicar no mapa e adicionar pin colorido
     mapViewer.addMouseListener(new MouseAdapter() {
         @Override
         public void mouseClicked(MouseEvent e) {
@@ -346,21 +345,28 @@ public class AlertPage extends JFrame {
             Rectangle2D vp = mapViewer.getViewportBounds();
             GeoPosition geo = mapViewer.getTileFactory()
                 .pixelToGeo(new Point2D.Double(vp.getX() + pt.getX(), vp.getY() + pt.getY()), mapViewer.getZoom());
+
             selectedPos[0] = geo;
 
-            // Cria o Waypoint e define cor conforme nível
-            Waypoint wp = new DefaultWaypoint(selectedPos[0]);
-            Set<Waypoint> waypoints = Set.of(wp);
+            Set<Waypoint> waypoints = new HashSet<>();
+            GeoPosition pos = new GeoPosition(geo.getLatitude(), geo.getLongitude());
+            waypoints.add(new DefaultWaypoint(pos));
 
             WaypointPainter<Waypoint> painter = new WaypointPainter<>();
             painter.setWaypoints(waypoints);
-            painter.setRenderer((Graphics2D g, JXMapViewer map, Waypoint waypoint) -> {
-                Point2D pos = map.convertGeoPositionToPoint(waypoint.getPosition());
-                if (pos != null) {
-                    int x = (int) pos.getX();
-                    int y = (int) pos.getY();
+            painter.setRenderer((g, map, wp) -> {
+                Point2D posPoint = map.convertGeoPositionToPoint(wp.getPosition());
+                if (posPoint != null) {
+                    int x = (int) posPoint.getX();
+                    int y = (int) posPoint.getY();
 
-                    Color fillColor = getColorForLevel(nivelField.getSelectedItem().toString());
+                    Color fillColor = switch (nivelField.getSelectedItem().toString().split(" - ")[0]) {
+                        case "Crítico" -> Color.RED;
+                        case "Alto" -> Color.ORANGE;
+                        case "Médio" -> Color.YELLOW;
+                        default -> Color.GREEN;
+                    };
+
                     g.setColor(fillColor);
                     g.fillOval(x - 6, y - 6, 12, 12);
                     g.setColor(Color.BLACK);
@@ -384,6 +390,7 @@ public class AlertPage extends JFrame {
                         String.format("%.6f", selectedPos[0].getLongitude()) + "</html>");
                     cl.show(cards, "FORM");
                     dialog.pack();
+                    dialog.setSize(800, 600);
                 });
             }).start();
         } else {
@@ -413,35 +420,7 @@ public class AlertPage extends JFrame {
 
     dialog.add(cards, BorderLayout.CENTER);
     dialog.add(new JPanel(new FlowLayout(FlowLayout.RIGHT)) {{ add(finalizeBtn); }}, BorderLayout.SOUTH);
-    dialog.pack();
-    dialog.setSize(600, 450);
-    dialog.setLocationRelativeTo(SwingUtilities.getWindowAncestor((Component) evt.getSource()));
     dialog.setVisible(true);
-}
-
-// Método para retornar cor baseada no nível
-private Color getColorForLevel(String nivel) {
-    return switch (nivel.split(" - ")[0]) {
-        case "Crítico" -> Color.RED;
-        case "Alto" -> Color.ORANGE;
-        case "Médio" -> Color.YELLOW;
-        default -> Color.GREEN;
-    };
-}
-// Reverse geocoding usando URLEncoder para evitar erro 400
-
-
-// Localização pelo IP
-private GeoPosition getCurrentLocationFromIP() {
-    try {
-        URL url = new URL("http://ip-api.com/json");
-        String json = new Scanner(url.openStream()).useDelimiter("\\A").next();
-        JSONObject obj = new JSONObject(json);
-        return new GeoPosition(obj.getDouble("lat"), obj.getDouble("lon"));
-    } catch (Exception e) {
-        System.out.println("Erro ao obter localização por IP: " + e.getMessage());
-        return null;
-    }
     }//GEN-LAST:event_BotaoAlertaActionPerformed
 
 
@@ -449,24 +428,6 @@ private GeoPosition getCurrentLocationFromIP() {
      *
      * @param args
      */
-    private String reverseGeocode(double lat, double lon) {
-    try {
-         // Força ponto como separador decimal
-        String latStr = String.format(Locale.US, "%.6f", lat);
-        String lonStr = String.format(Locale.US, "%.6f", lon);
-        URL url = new URL("https://nominatim.openstreetmap.org/reverse?format=json&lat=" + latStr + "&lon=" + lonStr);
-        HttpURLConnection conn = (HttpURLConnection) url.openConnection();
-        conn.setRequestProperty("User-Agent", "SeuApp/1.0");
-
-        try (Scanner scanner = new Scanner(conn.getInputStream())) {
-            String json = scanner.useDelimiter("\\A").next();
-            return new JSONObject(json).getString("display_name");
-        }
-    } catch (IOException | JSONException e) {
-        System.out.println("Erro no reverse geocoding: " + e.getMessage());
-        return "Endereço não disponível";
-    }
-}
 
     public static void main(String[] args) {
     java.awt.EventQueue.invokeLater(() -> {
@@ -494,4 +455,8 @@ private GeoPosition getCurrentLocationFromIP() {
     private javax.swing.JPanel jPanel1;
     private javax.swing.JScrollPane jScrollPane1;
     // End of variables declaration//GEN-END:variables
+
+    private GeoPosition getCurrentLocationFromIP() {
+        throw new UnsupportedOperationException("Not supported yet."); // Generated from nbfs://nbhost/SystemFileSystem/Templates/Classes/Code/GeneratedMethodBody
+    }
 }

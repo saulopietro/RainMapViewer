@@ -10,8 +10,8 @@ import java.awt.Color;
 public class ColoredWaypoint extends DefaultWaypoint {
     private final Color color;
 
-    public ColoredWaypoint(GeoPosition pos, Color color) {
-        super(pos);
+    public ColoredWaypoint(GeoPosition position, Color color) {
+        super(position);
         this.color = color;
     }
 
