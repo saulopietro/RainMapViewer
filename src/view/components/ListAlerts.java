@@ -33,16 +33,16 @@ public class ListAlerts extends javax.swing.JFrame {
 
         jTable1.setModel(new javax.swing.table.DefaultTableModel(
             new Object [][] {
-                {"Alagamento", "22:30", "Crítico", "Rua 19 de Novembro"},
-                {"Engarrafamento", "17:00", "Médio", "Ponte Estaiada"},
-                {"Alagamento", "15:00", "Baixo", "Avenida Brasil"}
+                {"Alagamento", "22:30", "Crítico", "Rua 19 de Novembro", null},
+                {"Engarrafamento", "17:00", "Médio", "Ponte Estaiada", null},
+                {"Alagamento", "15:00", "Baixo", "Avenida Brasil", null}
             },
             new String [] {
-                "Tipo", "Hora", "Nível", "Local"
+                "Tipo", "Hora", "Nível", "Local", "Data"
             }
         ) {
             Class[] types = new Class [] {
-                java.lang.String.class, java.lang.String.class, java.lang.String.class, java.lang.String.class
+                java.lang.String.class, java.lang.String.class, java.lang.String.class, java.lang.String.class, java.lang.Object.class
             };
 
             public Class getColumnClass(int columnIndex) {
@@ -55,7 +55,7 @@ public class ListAlerts extends javax.swing.JFrame {
         getContentPane().setLayout(layout);
         layout.setHorizontalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addComponent(jScrollPane1, javax.swing.GroupLayout.DEFAULT_SIZE, 692, Short.MAX_VALUE)
+            .addComponent(jScrollPane1, javax.swing.GroupLayout.DEFAULT_SIZE, 848, Short.MAX_VALUE)
         );
         layout.setVerticalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)

@@ -25,6 +25,7 @@ public class SideMenuView extends javax.swing.JFrame {
     @SuppressWarnings("unchecked")
     // <editor-fold defaultstate="collapsed" desc="Generated Code">//GEN-BEGIN:initComponents
     private void initComponents() {
+        java.awt.GridBagConstraints gridBagConstraints;
 
         SideMenuPanel = new javax.swing.JPanel();
         PerfilPanel = new javax.swing.JPanel();
@@ -40,6 +41,7 @@ public class SideMenuView extends javax.swing.JFrame {
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
 
         SideMenuPanel.setBackground(new java.awt.Color(255, 255, 255));
+        SideMenuPanel.setLayout(new java.awt.GridBagLayout());
 
         PerfilPanel.setBackground(new java.awt.Color(255, 255, 255));
         PerfilPanel.setCursor(new java.awt.Cursor(java.awt.Cursor.HAND_CURSOR));
@@ -63,6 +65,15 @@ public class SideMenuView extends javax.swing.JFrame {
         jLabel7.setIcon(new javax.swing.ImageIcon(getClass().getResource("/img/wdffTCL6rzidQAAAABJRU5ErkJggg.png"))); // NOI18N
         PerfilPanel.add(jLabel7, new org.netbeans.lib.awtextra.AbsoluteConstraints(30, 20, -1, -1));
 
+        gridBagConstraints = new java.awt.GridBagConstraints();
+        gridBagConstraints.gridx = 0;
+        gridBagConstraints.gridy = 2;
+        gridBagConstraints.ipadx = 56;
+        gridBagConstraints.ipady = 19;
+        gridBagConstraints.anchor = java.awt.GridBagConstraints.NORTHWEST;
+        gridBagConstraints.insets = new java.awt.Insets(6, 0, 278, 0);
+        SideMenuPanel.add(PerfilPanel, gridBagConstraints);
+
         AlertasPanel.setBackground(new java.awt.Color(255, 255, 255));
         AlertasPanel.setCursor(new java.awt.Cursor(java.awt.Cursor.HAND_CURSOR));
         AlertasPanel.setPreferredSize(new java.awt.Dimension(143, 90));
@@ -83,6 +94,15 @@ public class SideMenuView extends javax.swing.JFrame {
         jLabel5.setForeground(new java.awt.Color(0, 0, 0));
         jLabel5.setText("Alertas");
         AlertasPanel.add(jLabel5, new org.netbeans.lib.awtextra.AbsoluteConstraints(90, 20, -1, 30));
+
+        gridBagConstraints = new java.awt.GridBagConstraints();
+        gridBagConstraints.gridx = 0;
+        gridBagConstraints.gridy = 1;
+        gridBagConstraints.ipadx = 38;
+        gridBagConstraints.ipady = 19;
+        gridBagConstraints.anchor = java.awt.GridBagConstraints.NORTHWEST;
+        gridBagConstraints.insets = new java.awt.Insets(6, 0, 0, 0);
+        SideMenuPanel.add(AlertasPanel, gridBagConstraints);
 
         MapaPanel.setBackground(new java.awt.Color(255, 255, 255));
         MapaPanel.setCursor(new java.awt.Cursor(java.awt.Cursor.HAND_CURSOR));
@@ -115,25 +135,14 @@ public class SideMenuView extends javax.swing.JFrame {
         });
         MapaPanel.add(jLabel3, new org.netbeans.lib.awtextra.AbsoluteConstraints(90, 20, 61, 30));
 
-        javax.swing.GroupLayout SideMenuPanelLayout = new javax.swing.GroupLayout(SideMenuPanel);
-        SideMenuPanel.setLayout(SideMenuPanelLayout);
-        SideMenuPanelLayout.setHorizontalGroup(
-            SideMenuPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addComponent(MapaPanel, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-            .addComponent(AlertasPanel, javax.swing.GroupLayout.Alignment.TRAILING, javax.swing.GroupLayout.DEFAULT_SIZE, 200, Short.MAX_VALUE)
-            .addComponent(PerfilPanel, javax.swing.GroupLayout.Alignment.TRAILING, javax.swing.GroupLayout.DEFAULT_SIZE, 200, Short.MAX_VALUE)
-        );
-        SideMenuPanelLayout.setVerticalGroup(
-            SideMenuPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGroup(SideMenuPanelLayout.createSequentialGroup()
-                .addGap(161, 161, 161)
-                .addComponent(MapaPanel, javax.swing.GroupLayout.DEFAULT_SIZE, 74, Short.MAX_VALUE)
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addComponent(AlertasPanel, javax.swing.GroupLayout.DEFAULT_SIZE, 74, Short.MAX_VALUE)
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addComponent(PerfilPanel, javax.swing.GroupLayout.DEFAULT_SIZE, 74, Short.MAX_VALUE)
-                .addGap(158, 158, 158))
-        );
+        gridBagConstraints = new java.awt.GridBagConstraints();
+        gridBagConstraints.gridx = 0;
+        gridBagConstraints.gridy = 0;
+        gridBagConstraints.ipadx = 49;
+        gridBagConstraints.ipady = 19;
+        gridBagConstraints.anchor = java.awt.GridBagConstraints.NORTHWEST;
+        gridBagConstraints.insets = new java.awt.Insets(256, 0, 0, 0);
+        SideMenuPanel.add(MapaPanel, gridBagConstraints);
 
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(getContentPane());
         getContentPane().setLayout(layout);
