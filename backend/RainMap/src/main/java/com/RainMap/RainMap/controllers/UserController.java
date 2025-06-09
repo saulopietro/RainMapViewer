@@ -14,7 +14,7 @@ import java.net.URI;
 import java.util.List;
 
 @RestController
-@RequestMapping(value = "/user")
+@RequestMapping(value = "/login")
 public class UserController {
 
     @Autowired
@@ -38,7 +38,7 @@ public class UserController {
 
         if (userDTO != null) {
             if (userDTO.getPassword().matches(password)) {
-                return ResponseEntity.status(HttpStatus.ACCEPTED).body("Entrou");
+                return ResponseEntity.ok().build();
             }
             else throw new PasswordIncorrectException("Senha incorreta");
         }

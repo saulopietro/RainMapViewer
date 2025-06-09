@@ -9,5 +9,8 @@ package model;
  * @author saulo
  */
 public class User {
-    
+    private int id;
+    private String name;
+    private String lastname;
+    private String email;
 }
