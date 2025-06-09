@@ -33,6 +33,7 @@ import org.jxmapviewer.viewer.WaypointPainter;
 import javax.swing.table.DefaultTableModel;
 import java.text.SimpleDateFormat;
 import org.json.JSONObject;
+import view.components.MapComponent;
 
 /**
  *
@@ -280,176 +281,67 @@ public class AlertPage extends JFrame {
     }//GEN-LAST:event_MapaPanelMouseExited
 
     private void BotaoAlertaActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_BotaoAlertaActionPerformed
-        JDialog dialog = new JDialog((JFrame) SwingUtilities.getWindowAncestor((Component) evt.getSource()), "Novo Alerta", true);
-        dialog.setLayout(new BorderLayout(10, 10));
+            JFrame parent = (JFrame) SwingUtilities.getWindowAncestor((Component) evt.getSource());
 
-        final GeoPosition[] selectedPos = {null};
-        final String[] enderecoCompleto = {""};
+    // Cria o dialog
+    JDialog dialog = new JDialog(parent, "Selecionar Local no Mapa", true);
+    dialog.setLayout(new BorderLayout());
+    dialog.setSize(600, 500);
+    dialog.setLocationRelativeTo(parent);
 
-        JPanel formPanel = new JPanel(new GridLayout(5, 2, 10, 10));
-        String[] tipos = {"Engarrafamento", "Alagamento", "Acidente", "Obra", "Bloqueio", "Manifestação"};
-        String[] niveis = {"Crítico - Interdição total", "Alto - Tráfego lento", "Médio - Possível atraso", "Baixo - Tráfego normal"};
+    // Instancia o componente de mapa
+    MapComponent mapComponent = new MapComponent();
+    JXMapViewer map = mapComponent.getMap();
+    Background.setLayout(new BorderLayout());
+    Background.add(mapComponent, BorderLayout.CENTER);
 
-        JComboBox<String> tipoField = new JComboBox<>(tipos);
-        JSpinner horaField = new JSpinner(new SpinnerDateModel());
-        horaField.setEditor(new JSpinner.DateEditor(horaField, "HH:mm"));
-        horaField.setValue(new Date());
-        JComboBox<String> nivelField = new JComboBox<>(niveis);
-        JButton selectMapBtn = new JButton("Selecionar no mapa");
-        JLabel locationLabel = new JLabel("Nenhum local selecionado");
+    final GeoPosition[] selectedPosition = {null};
 
-        formPanel.add(new JLabel("Tipo:")); formPanel.add(tipoField);
-        formPanel.add(new JLabel("Hora:")); formPanel.add(horaField);
-        formPanel.add(new JLabel("Nível:")); formPanel.add(nivelField);
-        formPanel.add(selectMapBtn); formPanel.add(locationLabel);
+    // Adiciona clique no mapa para capturar coordenadas
+    map.addMouseListener(new MouseAdapter() {
+        @Override
+        public void mouseClicked(MouseEvent e) {
+            Point2D point = e.getPoint();
+            Rectangle2D viewport = map.getViewportBounds();
+            Point2D worldPoint = new Point2D.Double(
+                viewport.getX() + point.getX(),
+                viewport.getY() + point.getY()
+            );
 
-        JXMapViewer mapViewer = new JXMapViewer();
-        mapViewer.setTileFactory(new DefaultTileFactory(new OSMTileFactoryInfo()));
-        mapViewer.setZoom(16);
+            GeoPosition clickedGeo = map.getTileFactory().pixelToGeo(worldPoint, map.getZoom());
+            selectedPosition[0] = clickedGeo;
 
-        try {
-            GeoPosition current = getCurrentLocationFromIP();
-            mapViewer.setAddressLocation(current != null ? current : new GeoPosition(-23.5505, -46.6333));
-        } catch (Exception e) {
-            System.out.println("Erro ao obter localização: " + e.getMessage());
-            mapViewer.setAddressLocation(new GeoPosition(-23.5505, -46.6333));
+            // Desenha marcador
+            Waypoint wp = new DefaultWaypoint(clickedGeo);
+            WaypointPainter<Waypoint> painter = new WaypointPainter<>();
+            painter.setWaypoints(Set.of(wp));
+            map.setOverlayPainter(painter);
+            map.repaint();
         }
+    });
 
-        mapViewer.addMouseListener(new PanMouseInputListener(mapViewer));
-        mapViewer.addMouseMotionListener(new PanMouseInputListener(mapViewer));
-        mapViewer.addMouseWheelListener(new ZoomMouseWheelListenerCursor(mapViewer));
+    // Botão de confirmação
+    JButton confirmarBtn = new JButton("Confirmar Localização");
+    confirmarBtn.addActionListener(e -> {
+        if (selectedPosition[0] != null) {
+            // Exemplo de uso: você pode guardar num campo, exibir, etc.
+            System.out.println("Lat: " + selectedPosition[0].getLatitude());
+            System.out.println("Lon: " + selectedPosition[0].getLongitude());
 
-        JPanel mapWrapper = new JPanel(new BorderLayout());
-        mapWrapper.add(mapViewer, BorderLayout.CENTER);
-        JButton confirmLocationBtn = new JButton("Confirmar Localização");
-        mapWrapper.add(confirmLocationBtn, BorderLayout.SOUTH);
+            // Aqui, opcionalmente, você pode fazer reverse geocode
+            String endereco = reverseGeocode(selectedPosition[0].getLatitude(), selectedPosition[0].getLongitude());
+            JOptionPane.showMessageDialog(parent, "Endereço: " + endereco);
 
-        CardLayout cl = new CardLayout();
-        JPanel cards = new JPanel(cl);
-        cards.add(formPanel, "FORM");
-        cards.add(mapWrapper, "MAP");
-
-        selectMapBtn.addActionListener(e -> {
-            cl.show(cards, "MAP");
-            dialog.pack();
-            dialog.setSize(650, 500);
-        });
-
-        // Adiciona o clique no mapa para selecionar localização e desenhar o pin
-        mapViewer.addMouseListener(new MouseAdapter() {
-            @Override
-            public void mouseClicked(MouseEvent e) {
-                Point2D pt = e.getPoint();
-                Rectangle2D vp = mapViewer.getViewportBounds();
-                GeoPosition geo = mapViewer.getTileFactory()
-                .pixelToGeo(new Point2D.Double(vp.getX() + pt.getX(), vp.getY() + pt.getY()), mapViewer.getZoom());
-                selectedPos[0] = geo;
-
-                // Atualiza marcador
-                Waypoint wp = new DefaultWaypoint(selectedPos[0]);
-                WaypointPainter<Waypoint> painter = new WaypointPainter<>();
-                painter.setWaypoints(Set.of(wp));
-                painter.setRenderer((Graphics2D g, JXMapViewer map, Waypoint waypoint) -> {
-                    Point2D mapPoint = map.convertGeoPositionToPoint(waypoint.getPosition());
-                    if (mapPoint != null) {
-                        int x = (int) mapPoint.getX();
-                        int y = (int) mapPoint.getY();
-
-                        g.setColor(getColorForLevel(nivelField.getSelectedItem().toString()));
-                        g.fillOval(x - 6, y - 6, 12, 12);
-                        g.setColor(Color.BLACK);
-                        g.setStroke(new BasicStroke(2));
-                        g.drawOval(x - 6, y - 6, 12, 12);
-                    }
-                });
-
-                mapViewer.setOverlayPainter(painter);
-                mapViewer.repaint(); // força a atualização visual
-            }
-        });
-
-        confirmLocationBtn.addActionListener(e -> {
-            if (selectedPos[0] != null) {
-                new Thread(() -> {
-                    enderecoCompleto[0] = reverseGeocode(selectedPos[0].getLatitude(), selectedPos[0].getLongitude());
-                    SwingUtilities.invokeLater(() -> {
-                        locationLabel.setText("<html>" + enderecoCompleto[0] + "<br>Lat: " +
-                            String.format("%.6f", selectedPos[0].getLatitude()) + ", Lon: " +
-                            String.format("%.6f", selectedPos[0].getLongitude()) + "</html>");
-                        cl.show(cards, "FORM");
-                    });
-                }).start();
-            } else {
-                JOptionPane.showMessageDialog(dialog, "Selecione um local no mapa.");
-            }
-        });
-
-        JButton finalizeBtn = new JButton("Salvar Alerta");
-        finalizeBtn.addActionListener(e -> {
-            if (selectedPos[0] == null) {
-                JOptionPane.showMessageDialog(dialog, "Selecione um local no mapa primeiro.");
-                return;
-            }
-
-            DefaultTableModel model = (DefaultTableModel) AlertsTable.getModel();
-            model.addRow(new Object[]{
-                tipoField.getSelectedItem(),
-                new SimpleDateFormat("HH:mm").format(horaField.getValue()),
-                nivelField.getSelectedItem(),
-                enderecoCompleto[0],
-                String.format("%.6f", selectedPos[0].getLatitude()),
-                String.format("%.6f", selectedPos[0].getLongitude())
-            });
-
-            dialog.dispose();
-        });
-
-        dialog.add(cards, BorderLayout.CENTER);
-        dialog.add(new JPanel(new FlowLayout(FlowLayout.RIGHT)) {{ add(finalizeBtn); }}, BorderLayout.SOUTH);
-        dialog.pack();
-        dialog.setSize(600, 450);
-        dialog.setLocationRelativeTo(SwingUtilities.getWindowAncestor((Component) evt.getSource()));
-        dialog.setVisible(true);
+            dialog.dispose(); // fecha o diálogo
+        } else {
+            JOptionPane.showMessageDialog(dialog, "Clique no mapa para selecionar uma localização.");
         }
+    });
 
-        // Retorna a cor conforme o nível do alerta
-        private Color getColorForLevel(String nivel) {
-            return switch (nivel.split(" - ")[0]) {
-                case "Crítico" -> Color.RED;
-                case "Alto" -> Color.ORANGE;
-                case "Médio" -> Color.YELLOW;
-                default -> Color.GREEN;
-            };
-        }
-
-        // Consulta o endereço a partir da latitude/longitude
-        private String reverseGeocode(double lat, double lon) {
-            try {
-                URL url = new URL(String.format("https://nominatim.openstreetmap.org/reverse?format=json&lat=%.6f&lon=%.6f", lat, lon));
-                HttpURLConnection conn = (HttpURLConnection) url.openConnection();
-                conn.setRequestProperty("User-Agent", "SeuApp/1.0");
-
-                try (Scanner scanner = new Scanner(conn.getInputStream())) {
-                    String json = scanner.useDelimiter("\\A").next();
-                    return new JSONObject(json).getString("display_name");
-                }
-            } catch (Exception e) {
-                System.out.println("Erro no reverse geocoding: " + e.getMessage());
-                return "Endereço não disponível";
-            }
-        }
-
-        // Tenta localizar a posição do usuário via IP
-        private GeoPosition getCurrentLocationFromIP() {
-            try {
-                URL url = new URL("http://ip-api.com/json");
-                String json = new Scanner(url.openStream()).useDelimiter("\\A").next();
-                JSONObject obj = new JSONObject(json);
-                return new GeoPosition(obj.getDouble("lat"), obj.getDouble("lon"));
-            } catch (Exception e) {
-                System.out.println("Erro ao obter localização por IP: " + e.getMessage());
-                return null;
-            }
+    // Adiciona ao diálogo
+    dialog.add(mapComponent, BorderLayout.CENTER);
+    dialog.add(confirmarBtn, BorderLayout.SOUTH);
+    dialog.setVisible(true);
     }//GEN-LAST:event_BotaoAlertaActionPerformed
 
 
@@ -457,7 +349,22 @@ public class AlertPage extends JFrame {
      *
      * @param args
      */
-    
+    private String reverseGeocode(double lat, double lon) {
+    try {
+        URL url = new URL(String.format("https://nominatim.openstreetmap.org/reverse?format=json&lat=%.6f&lon=%.6f", lat, lon));
+        HttpURLConnection conn = (HttpURLConnection) url.openConnection();
+        conn.setRequestProperty("User-Agent", "SeuApp/1.0");
+
+        try (Scanner scanner = new Scanner(conn.getInputStream())) {
+            String json = scanner.useDelimiter("\\A").next();
+            return new JSONObject(json).getString("display_name");
+        }
+    } catch (Exception e) {
+        System.out.println("Erro no reverse geocoding: " + e.getMessage());
+        return "Endereço não disponível";
+    }
+}
+
     public static void main(String[] args) {
     java.awt.EventQueue.invokeLater(() -> {
         new AlertPage().setVisible(true);
