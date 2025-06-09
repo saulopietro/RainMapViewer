@@ -5,39 +5,43 @@
 package view;
 
 import java.awt.BorderLayout;
-import java.awt.Dimension;
+import java.awt.CardLayout;
+import java.awt.Color;
+import java.awt.Component;
 import java.awt.FlowLayout;
+import java.awt.Graphics2D;
 import java.awt.GridLayout;
-import java.awt.event.MouseAdapter;
-import java.awt.event.MouseEvent;
-import java.text.SimpleDateFormat;
-import java.util.Date;
-import javax.swing.table.DefaultTableModel;
 import javax.swing.*;
+import javax.swing.table.DefaultTableModel;
+import java.awt.event.*;
+import java.awt.geom.Point2D;
+import java.awt.geom.Rectangle2D;
+import java.net.HttpURLConnection;
+import java.net.URL;
+import java.text.SimpleDateFormat;
+import java.time.LocalTime;
+import java.util.Date;
+import java.util.Scanner;
+import java.util.Set;
+import javax.swing.event.MouseInputListener;
+import org.json.JSONObject;
 import org.jxmapviewer.JXMapViewer;
 import org.jxmapviewer.OSMTileFactoryInfo;
-import org.jxmapviewer.input.CenterMapListener;
 import org.jxmapviewer.input.PanKeyListener;
 import org.jxmapviewer.input.PanMouseInputListener;
 import org.jxmapviewer.input.ZoomMouseWheelListenerCursor;
-import org.jxmapviewer.painter.CompoundPainter;
-import org.jxmapviewer.painter.Painter;
 import org.jxmapviewer.viewer.DefaultTileFactory;
+import org.jxmapviewer.viewer.DefaultWaypoint;
 import org.jxmapviewer.viewer.GeoPosition;
 import org.jxmapviewer.viewer.TileFactoryInfo;
 import org.jxmapviewer.viewer.Waypoint;
 import org.jxmapviewer.viewer.WaypointPainter;
-import java.awt.geom.Point2D;
-import java.awt.geom.Rectangle2D;
-import java.util.HashSet;
-import java.util.Set;
-import org.jxmapviewer.viewer.DefaultWaypoint;
 
 /**
  *
  * @author alway
  */
-public class AlertPage extends javax.swing.JFrame {
+public class AlertPage extends JFrame {
 
     /**
      * Creates new form MainPage
@@ -205,11 +209,6 @@ public class AlertPage extends javax.swing.JFrame {
         jPanel1.setLayout(new java.awt.BorderLayout());
 
         jButton1.setText("Excluir");
-        jButton1.addActionListener(new java.awt.event.ActionListener() {
-            public void actionPerformed(java.awt.event.ActionEvent evt) {
-                jButton1ActionPerformed(evt);
-            }
-        });
         jPanel1.add(jButton1, java.awt.BorderLayout.CENTER);
 
         javax.swing.GroupLayout BackgroundLayout = new javax.swing.GroupLayout(Background);
@@ -218,25 +217,30 @@ public class AlertPage extends javax.swing.JFrame {
             BackgroundLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(BackgroundLayout.createSequentialGroup()
                 .addComponent(SideMenuPanel, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
                 .addGroup(BackgroundLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                     .addGroup(BackgroundLayout.createSequentialGroup()
-                        .addGap(343, 343, 343)
-                        .addComponent(BotaoPanel, javax.swing.GroupLayout.PREFERRED_SIZE, 157, javax.swing.GroupLayout.PREFERRED_SIZE))
-                    .addComponent(jScrollPane1, javax.swing.GroupLayout.PREFERRED_SIZE, 776, javax.swing.GroupLayout.PREFERRED_SIZE)
-                    .addComponent(jPanel1, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
-                .addContainerGap(12, Short.MAX_VALUE))
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
+                        .addGroup(BackgroundLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                            .addGroup(BackgroundLayout.createSequentialGroup()
+                                .addComponent(jPanel1, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                .addGap(0, 0, Short.MAX_VALUE))
+                            .addComponent(jScrollPane1))
+                        .addContainerGap())
+                    .addGroup(BackgroundLayout.createSequentialGroup()
+                        .addGap(335, 335, 335)
+                        .addComponent(BotaoPanel, javax.swing.GroupLayout.PREFERRED_SIZE, 180, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addContainerGap(327, Short.MAX_VALUE))))
         );
         BackgroundLayout.setVerticalGroup(
             BackgroundLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, BackgroundLayout.createSequentialGroup()
-                .addGap(55, 55, 55)
-                .addComponent(BotaoPanel, javax.swing.GroupLayout.PREFERRED_SIZE, 48, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 35, Short.MAX_VALUE)
+                .addGap(44, 44, 44)
+                .addComponent(BotaoPanel, javax.swing.GroupLayout.PREFERRED_SIZE, 70, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addGap(24, 24, 24)
                 .addComponent(jPanel1, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addComponent(jScrollPane1, javax.swing.GroupLayout.PREFERRED_SIZE, 403, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addGap(30, 30, 30))
+                .addComponent(jScrollPane1)
+                .addContainerGap())
             .addComponent(SideMenuPanel, javax.swing.GroupLayout.DEFAULT_SIZE, 600, Short.MAX_VALUE)
         );
 
@@ -279,213 +283,180 @@ public class AlertPage extends javax.swing.JFrame {
     }//GEN-LAST:event_MapaPanelMouseExited
 
     private void BotaoAlertaActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_BotaoAlertaActionPerformed
-            JDialog dialog = new JDialog(this, "Novo Alerta", true);
+    JDialog dialog = new JDialog((JFrame) SwingUtilities.getWindowAncestor((Component)evt.getSource()), "Novo Alerta", true);
     dialog.setLayout(new BorderLayout(10, 10));
 
-    // Usando array para contornar a restrição de variável final
-    final GeoPosition[] selectedPosition = {null};
+    final GeoPosition[] selectedPos = {null};
+    final String[] enderecoCompleto = {""};
 
-    // Painel de formulário
-    JPanel formPanel = new JPanel(new GridLayout(4, 2, 10, 10));
+    // Formulário
+    JPanel formPanel = new JPanel(new GridLayout(5, 2, 10, 10));
+    String[] tipos = {"Engarrafamento", "Alagamento", "Acidente", "Obra", "Bloqueio", "Manifestação"};
+    String[] niveis = {"Crítico - Interdição total", "Alto - Tráfego lento", "Médio - Possível atraso", "Baixo - Tráfego normal"};
     
-    // Tipos de ocorrências
-    String[] tiposOcorrencias = {
-        "Engarrafamento", "Alagamento", "Acidente", 
-        "Obra na pista", "Bloqueio", "Manifestação"
-    };
-    
-    // Níveis de urgência
-    String[] niveisUrgencia = {
-        "Crítico - Interdição total",
-        "Alto - Tráfego lento", 
-        "Médio - Possível atraso", 
-        "Baixo - Tráfego normal"
-    };
-    
-    // Componentes do formulário
-    JComboBox<String> tipoField = new JComboBox<>(tiposOcorrencias);
+    JComboBox<String> tipoField = new JComboBox<>(tipos);
     JSpinner horaField = new JSpinner(new SpinnerDateModel());
-    JComboBox<String> nivelField = new JComboBox<>(niveisUrgencia);
-    
-    // Configuração do spinner de hora
-    JSpinner.DateEditor timeEditor = new JSpinner.DateEditor(horaField, "HH:mm");
-    horaField.setEditor(timeEditor);
+    horaField.setEditor(new JSpinner.DateEditor(horaField, "HH:mm"));
     horaField.setValue(new Date());
-
-    // Componentes para seleção de localização
-    JButton selectLocationBtn = new JButton("Selecionar no mapa");
+    JComboBox<String> nivelField = new JComboBox<>(niveis);
+    JButton selectMapBtn = new JButton("Selecionar no mapa");
     JLabel locationLabel = new JLabel("Nenhum local selecionado");
-    locationLabel.setBorder(BorderFactory.createEtchedBorder());
+    
+    formPanel.add(new JLabel("Tipo:")); formPanel.add(tipoField);
+    formPanel.add(new JLabel("Hora:")); formPanel.add(horaField);
+    formPanel.add(new JLabel("Nível:")); formPanel.add(nivelField);
+    formPanel.add(selectMapBtn); formPanel.add(locationLabel);
 
-    // Configuração do mapa
+    // Mapa
     JXMapViewer mapViewer = new JXMapViewer();
+    mapViewer.setTileFactory(new DefaultTileFactory(new OSMTileFactoryInfo()));
     mapViewer.setZoom(12);
     
-    // Usando OpenStreetMap
-    TileFactoryInfo info = new OSMTileFactoryInfo();
-    DefaultTileFactory tileFactory = new DefaultTileFactory(info);
-    mapViewer.setTileFactory(tileFactory);
-    
-    // Centraliza em uma localização inicial (ex: São Paulo)
-    mapViewer.setAddressLocation(new GeoPosition(-23.5505, -46.6333));
+    try {
+        GeoPosition current = getCurrentLocationFromIP();
+        mapViewer.setAddressLocation(current != null ? current : new GeoPosition(-23.5505, -46.6333));
+    } catch (Exception e) {
+        System.out.println("Erro ao obter localização: " + e.getMessage());
+        mapViewer.setAddressLocation(new GeoPosition(-23.5505, -46.6333));
+    }
 
-    // Configura controles de navegação do mapa
-    PanMouseInputListener panListener = new PanMouseInputListener(mapViewer);
-    mapViewer.addMouseListener(panListener);
-    mapViewer.addMouseMotionListener(panListener);
+    mapViewer.addMouseListener(new PanMouseInputListener(mapViewer));
+    mapViewer.addMouseMotionListener(new PanMouseInputListener(mapViewer));
     mapViewer.addMouseWheelListener(new ZoomMouseWheelListenerCursor(mapViewer));
-    mapViewer.addKeyListener(new PanKeyListener(mapViewer));
 
-    // Painel do mapa (inicialmente oculto)
-    JPanel mapPanel = new JPanel(new BorderLayout());
-    mapPanel.add(mapViewer, BorderLayout.CENTER);
-    mapPanel.setPreferredSize(new Dimension(600, 400));
-    mapPanel.setVisible(false);
-    
-    // Botão para confirmar localização
+    JPanel mapWrapper = new JPanel(new BorderLayout());
+    mapWrapper.add(mapViewer, BorderLayout.CENTER);
     JButton confirmLocationBtn = new JButton("Confirmar Localização");
-    confirmLocationBtn.setVisible(false);
+    mapWrapper.add(confirmLocationBtn, BorderLayout.SOUTH);
+    
+    // Cards
+    CardLayout cl = new CardLayout();
+    JPanel cards = new JPanel(cl);
+    cards.add(formPanel, "FORM");
+    cards.add(mapWrapper, "MAP");
 
-    // Ação do botão de seleção no mapa
-    selectLocationBtn.addActionListener(e -> {
-        formPanel.setVisible(false);
-        mapPanel.setVisible(true);
-        confirmLocationBtn.setVisible(true);
+    selectMapBtn.addActionListener(e -> {
+        cl.show(cards, "MAP");
         dialog.pack();
+        dialog.setSize(650, 500);
     });
 
-    // Listener para clique no mapa
     mapViewer.addMouseListener(new MouseAdapter() {
-        @Override
-        public void mouseClicked(MouseEvent e) {
-            Point2D clickPoint = e.getPoint();
-            Rectangle2D viewportBounds = mapViewer.getViewportBounds();
-            
-            double x = viewportBounds.getX() + clickPoint.getX();
-            double y = viewportBounds.getY() + clickPoint.getY();
-            
-            selectedPosition[0] = mapViewer.getTileFactory().pixelToGeo(
-                new Point2D.Double(x, y), 
-                mapViewer.getZoom()
-            );
-            
-            // Adiciona marcador no local selecionado
-            Set<Waypoint> waypoints = new HashSet<>();
-            waypoints.add(new DefaultWaypoint(selectedPosition[0]));
-            
-            WaypointPainter<Waypoint> waypointPainter = new WaypointPainter<>();
-            waypointPainter.setWaypoints(waypoints);
-            mapViewer.setOverlayPainter(waypointPainter);
-            
-            mapViewer.repaint();
-        }
-    });
+    @Override
+    public void mouseClicked(MouseEvent e) {
+        Point2D pt = e.getPoint();
+        Rectangle2D vp = mapViewer.getViewportBounds();
+        selectedPos[0] = mapViewer.getTileFactory()
+            .pixelToGeo(new Point2D.Double(vp.getX() + pt.getX(), vp.getY() + pt.getY()), mapViewer.getZoom());
 
-    // Ação do botão de confirmar localização
+        System.out.println("Clicado em: " + selectedPos[0]); // Para debug
+
+        Waypoint wp = new DefaultWaypoint(selectedPos[0]);
+        WaypointPainter<Waypoint> painter = new WaypointPainter<>();
+        painter.setWaypoints(Set.of(wp));
+        painter.setRenderer((Graphics2D g, JXMapViewer m, Waypoint w) -> {
+            Point2D wpPt = m.convertGeoPositionToPoint(w.getPosition());
+            g.setColor(getColorForLevel(nivelField.getSelectedItem().toString()));
+            g.fillOval((int) wpPt.getX() - 6, (int) wpPt.getY() - 6, 12, 12);
+        });
+        mapViewer.setOverlayPainter(painter);
+        mapViewer.repaint();
+    }
+});
+
     confirmLocationBtn.addActionListener(e -> {
-        if (selectedPosition[0] != null) {
-            locationLabel.setText(String.format("Lat: %.4f, Long: %.4f", 
-                selectedPosition[0].getLatitude(), 
-                selectedPosition[0].getLongitude()));
+        if (selectedPos[0] != null) {
+            new Thread(() -> {
+                enderecoCompleto[0] = reverseGeocode(selectedPos[0].getLatitude(), selectedPos[0].getLongitude());
+                SwingUtilities.invokeLater(() -> {
+                    locationLabel.setText("<html>" + enderecoCompleto[0] + "<br>Lat: " + 
+                        String.format("%.6f", selectedPos[0].getLatitude()) + ", Lon: " + 
+                        String.format("%.6f", selectedPos[0].getLongitude()) + "</html>");
+                    cl.show(cards, "FORM");
+                });
+            }).start();
+        } else {
+            JOptionPane.showMessageDialog(dialog, "Selecione um local no mapa.");
         }
-        mapPanel.setVisible(false);
-        formPanel.setVisible(true);
-        confirmLocationBtn.setVisible(false);
-        dialog.pack();
     });
 
-    // Botão de salvar
-    JButton saveButton = new JButton("Salvar");
-    saveButton.addActionListener(e -> {
-        if (selectedPosition[0] == null) {
-            JOptionPane.showMessageDialog(dialog, "Selecione um local no mapa!");
+    JButton finalizeBtn = new JButton("Salvar Alerta");
+    finalizeBtn.addActionListener(e -> {
+        if (selectedPos[0] == null) {
+            JOptionPane.showMessageDialog(dialog, "Selecione um local no mapa primeiro.");
             return;
         }
-        
-        String tipo = (String) tipoField.getSelectedItem();
-        Date hora = (Date) horaField.getValue();
-        String nivel = (String) nivelField.getSelectedItem();
-        
-        SimpleDateFormat sdf = new SimpleDateFormat("HH:mm");
-        String horaFormatada = sdf.format(hora);
-        
-        String localizacao = String.format("%.4f, %.4f", 
-            selectedPosition[0].getLatitude(), 
-            selectedPosition[0].getLongitude());
-        
         DefaultTableModel model = (DefaultTableModel) AlertsTable.getModel();
-        model.addRow(new Object[]{tipo, horaFormatada, nivel, localizacao});
+        model.addRow(new Object[]{
+            tipoField.getSelectedItem(),
+            new SimpleDateFormat("HH:mm").format(horaField.getValue()),
+            nivelField.getSelectedItem(),
+            enderecoCompleto[0],
+            String.format("%.6f", selectedPos[0].getLatitude()),
+            String.format("%.6f", selectedPos[0].getLongitude())
+        });
         dialog.dispose();
     });
 
-    // Adicionando componentes ao formulário
-    formPanel.add(new JLabel("Tipo de ocorrência:"));
-    formPanel.add(tipoField);
-    formPanel.add(new JLabel("Hora:"));
-    formPanel.add(horaField);
-    formPanel.add(new JLabel("Nível de urgência:"));
-    formPanel.add(nivelField);
-    formPanel.add(new JLabel("Localização:"));
-    formPanel.add(selectLocationBtn);
-    formPanel.add(new JLabel("Local selecionado:"));
-    formPanel.add(locationLabel);
-
-    // Painel de botões
-    JPanel buttonPanel = new JPanel(new FlowLayout(FlowLayout.RIGHT));
-    buttonPanel.add(saveButton);
-
-    // Adicionando tudo ao diálogo
-    dialog.add(formPanel, BorderLayout.NORTH);
-    dialog.add(mapPanel, BorderLayout.CENTER);
-    dialog.add(confirmLocationBtn, BorderLayout.SOUTH);
-    dialog.add(buttonPanel, BorderLayout.PAGE_END);
-
+    dialog.add(cards, BorderLayout.CENTER);
+    dialog.add(new JPanel(new FlowLayout(FlowLayout.RIGHT)) {{ add(finalizeBtn); }}, BorderLayout.SOUTH);
     dialog.pack();
-    dialog.setSize(600, 500);
-    dialog.setLocationRelativeTo(this);
+    dialog.setSize(600, 450);
+    dialog.setLocationRelativeTo(SwingUtilities.getWindowAncestor((Component)evt.getSource()));
     dialog.setVisible(true);
-    }//GEN-LAST:event_BotaoAlertaActionPerformed
+}
 
-    private void jButton1ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton1ActionPerformed
-        // TODO add your handling code here:
-    }//GEN-LAST:event_jButton1ActionPerformed
+// Métodos auxiliares simplificados
+private Color getColorForLevel(String nivel) {
+    return switch (nivel.split(" - ")[0]) {
+        case "Crítico" -> Color.RED;
+        case "Alto" -> Color.ORANGE;
+        case "Médio" -> Color.YELLOW;
+        default -> Color.GREEN;
+    };
+}
+
+private String reverseGeocode(double lat, double lon) {
+    try {
+        URL url = new URL(String.format("https://nominatim.openstreetmap.org/reverse?format=json&lat=%.6f&lon=%.6f", lat, lon));
+        HttpURLConnection conn = (HttpURLConnection) url.openConnection();
+        conn.setRequestProperty("User-Agent", "JavaApp/1.0 (contato@seudominio.com)");
+        conn.setRequestProperty("Accept-Language", "pt-BR");
+        
+        try (Scanner scanner = new Scanner(conn.getInputStream())) {
+            String json = scanner.useDelimiter("\\A").next();
+            return new JSONObject(json).getString("display_name");
+        }
+    } catch (Exception e) {
+        System.out.println("Erro no reverse geocoding: " + e.getMessage());
+        return "Endereço não disponível";
+    }
+}
+
+private GeoPosition getCurrentLocationFromIP() {
+    try {
+        URL url = new URL("http://ip-api.com/json");
+        String json = new Scanner(url.openStream()).useDelimiter("\\A").next();
+        JSONObject obj = new JSONObject(json);
+        return new GeoPosition(obj.getDouble("lat"), obj.getDouble("lon"));
+    } catch (Exception e) {
+        System.out.println("Erro ao obter localização por IP: " + e.getMessage());
+        return null;
+    }//GEN-LAST:event_BotaoAlertaActionPerformed
+}
 
     /**
-     * @param args the command line arguments
+     *
+     * @param args
      */
-    public static void main(String args[]) {
-        /* Set the Nimbus look and feel */
-        //<editor-fold defaultstate="collapsed" desc=" Look and feel setting code (optional) ">
-        /* If Nimbus (introduced in Java SE 6) is not available, stay with the default look and feel.
-         * For details see http://download.oracle.com/javase/tutorial/uiswing/lookandfeel/plaf.html 
-         */
-        try {
-            for (javax.swing.UIManager.LookAndFeelInfo info : javax.swing.UIManager.getInstalledLookAndFeels()) {
-                if ("Windows".equals(info.getName())) {
-                    javax.swing.UIManager.setLookAndFeel(info.getClassName());
-                    break;
-                }
-            }
-        } catch (ClassNotFoundException ex) {
-            java.util.logging.Logger.getLogger(AlertPage.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
-        } catch (InstantiationException ex) {
-            java.util.logging.Logger.getLogger(AlertPage.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
-        } catch (IllegalAccessException ex) {
-            java.util.logging.Logger.getLogger(AlertPage.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
-        } catch (javax.swing.UnsupportedLookAndFeelException ex) {
-            java.util.logging.Logger.getLogger(AlertPage.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
-        }
-        //</editor-fold>
-        //</editor-fold>
+    
+    public static void main(String[] args) {
+    java.awt.EventQueue.invokeLater(() -> {
+        new AlertPage().setVisible(true);
+    });
+}
 
-        /* Create and display the form */
-        java.awt.EventQueue.invokeLater(new Runnable() {
-            public void run() {
-                new AlertPage().setVisible(true);
-            }
-        });
-    }
-
+    
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JPanel AlertasPanel;
     private javax.swing.JTable AlertsTable;
