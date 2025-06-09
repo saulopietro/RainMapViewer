@@ -101,30 +101,23 @@ public class SideMenuView extends javax.swing.JFrame {
         MapaPanel.setLayout(new org.netbeans.lib.awtextra.AbsoluteLayout());
 
         jLabel4.setIcon(new javax.swing.ImageIcon(getClass().getResource("/img/CfCqj5bgJAGChpNqi7Ii4AYBEmPXtUjQ6JqQHfRQgKDRQ2wOhQACCCCAgNcECBpW1DhPbFaosk8EEEAAAQcKWBM0EPrwKZAkRFwlwC3IXfVJ2fjXAFrgoZzPSg5AggggAACCJgo8FyYtMDl4b6IQAAAABJRU5ErkJggg.png"))); // NOI18N
-        jLabel4.setCursor(new java.awt.Cursor(java.awt.Cursor.DEFAULT_CURSOR));
+        jLabel4.setCursor(new java.awt.Cursor(java.awt.Cursor.HAND_CURSOR));
         MapaPanel.add(jLabel4, new org.netbeans.lib.awtextra.AbsoluteConstraints(30, 20, -1, -1));
 
         jLabel3.setFont(new java.awt.Font("Segoe UI", 0, 24)); // NOI18N
         jLabel3.setForeground(new java.awt.Color(0, 0, 0));
         jLabel3.setText("Mapa");
-        jLabel3.setCursor(new java.awt.Cursor(java.awt.Cursor.DEFAULT_CURSOR));
-        jLabel3.addMouseListener(new java.awt.event.MouseAdapter() {
-            public void mouseEntered(java.awt.event.MouseEvent evt) {
-                jLabel3MouseEntered(evt);
-            }
-            public void mouseExited(java.awt.event.MouseEvent evt) {
-                jLabel3MouseExited(evt);
-            }
-        });
+        jLabel3.setCursor(new java.awt.Cursor(java.awt.Cursor.HAND_CURSOR));
         MapaPanel.add(jLabel3, new org.netbeans.lib.awtextra.AbsoluteConstraints(90, 20, 61, 30));
 
         javax.swing.GroupLayout SideMenuPanelLayout = new javax.swing.GroupLayout(SideMenuPanel);
         SideMenuPanel.setLayout(SideMenuPanelLayout);
         SideMenuPanelLayout.setHorizontalGroup(
             SideMenuPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addComponent(MapaPanel, javax.swing.GroupLayout.PREFERRED_SIZE, 200, javax.swing.GroupLayout.PREFERRED_SIZE)
-            .addComponent(AlertasPanel, javax.swing.GroupLayout.PREFERRED_SIZE, 200, javax.swing.GroupLayout.PREFERRED_SIZE)
-            .addComponent(PerfilPanel, javax.swing.GroupLayout.Alignment.TRAILING, javax.swing.GroupLayout.PREFERRED_SIZE, 200, javax.swing.GroupLayout.PREFERRED_SIZE)
+            .addGroup(SideMenuPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.CENTER)
+                .addComponent(PerfilPanel, javax.swing.GroupLayout.PREFERRED_SIZE, 200, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addComponent(AlertasPanel, javax.swing.GroupLayout.PREFERRED_SIZE, 200, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addComponent(MapaPanel, javax.swing.GroupLayout.PREFERRED_SIZE, 200, javax.swing.GroupLayout.PREFERRED_SIZE))
         );
         SideMenuPanelLayout.setVerticalGroup(
             SideMenuPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
@@ -150,34 +143,28 @@ public class SideMenuView extends javax.swing.JFrame {
         pack();
     }// </editor-fold>//GEN-END:initComponents
 
-    private void jLabel3MouseEntered(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_jLabel3MouseEntered
-    }//GEN-LAST:event_jLabel3MouseEntered
-
-    private void jLabel3MouseExited(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_jLabel3MouseExited
-    }//GEN-LAST:event_jLabel3MouseExited
-
     private void MapaPanelMouseEntered(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_MapaPanelMouseEntered
-        MapaPanel.setBackground(MapaPanel.getBackground().darker());
+        MapaPanel.setBackground(SideMenuPanel.getBackground().darker());
     }//GEN-LAST:event_MapaPanelMouseEntered
 
     private void MapaPanelMouseExited(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_MapaPanelMouseExited
-        MapaPanel.setBackground(MapaPanel.getBackground().brighter());
+        MapaPanel.setBackground(SideMenuPanel.getBackground().brighter());
     }//GEN-LAST:event_MapaPanelMouseExited
 
     private void AlertasPanelMouseEntered(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_AlertasPanelMouseEntered
-        AlertasPanel.setBackground(MapaPanel.getBackground().darker());
+        AlertasPanel.setBackground(SideMenuPanel.getBackground().darker());
     }//GEN-LAST:event_AlertasPanelMouseEntered
 
     private void AlertasPanelMouseExited(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_AlertasPanelMouseExited
-        AlertasPanel.setBackground(MapaPanel.getBackground().brighter());
+        AlertasPanel.setBackground(SideMenuPanel.getBackground().brighter());
     }//GEN-LAST:event_AlertasPanelMouseExited
 
     private void PerfilPanelMouseEntered(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_PerfilPanelMouseEntered
-        PerfilPanel.setBackground(MapaPanel.getBackground().darker());
+        PerfilPanel.setBackground(SideMenuPanel.getBackground().darker());
     }//GEN-LAST:event_PerfilPanelMouseEntered
 
     private void PerfilPanelMouseExited(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_PerfilPanelMouseExited
-        PerfilPanel.setBackground(MapaPanel.getBackground().brighter());
+        PerfilPanel.setBackground(SideMenuPanel.getBackground().brighter());
     }//GEN-LAST:event_PerfilPanelMouseExited
   
     /**
