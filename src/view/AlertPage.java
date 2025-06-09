@@ -19,6 +19,7 @@ import java.awt.geom.Rectangle2D;
 import java.io.IOException;
 import java.net.HttpURLConnection;
 import java.net.URL;
+import java.net.URLEncoder;
 import java.util.Date;
 import java.util.Scanner;
 import java.util.Set;
@@ -284,7 +285,7 @@ public class AlertPage extends JFrame {
     }//GEN-LAST:event_MapaPanelMouseExited
 
     private void BotaoAlertaActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_BotaoAlertaActionPerformed
-            JDialog dialog = new JDialog((JFrame) SwingUtilities.getWindowAncestor((Component) evt.getSource()), "Novo Alerta", true);
+    JDialog dialog = new JDialog((JFrame) SwingUtilities.getWindowAncestor((Component) evt.getSource()), "Novo Alerta", true);
     dialog.setLayout(new BorderLayout(10, 10));
 
     final GeoPosition[] selectedPos = {null};
@@ -307,19 +308,19 @@ public class AlertPage extends JFrame {
     formPanel.add(new JLabel("Nível:")); formPanel.add(nivelField);
     formPanel.add(selectMapBtn); formPanel.add(locationLabel);
 
-    // Cria e configura o componente de mapa
+    // Usa seu MapComponent
     MapComponent mapComponent = new MapComponent();
-    JXMapViewer map = mapComponent.getMap();
+    JXMapViewer mapViewer = mapComponent.getMap();
 
+    // Define zoom inicial e localização padrão
+    mapViewer.setZoom(16);
     try {
         GeoPosition current = getCurrentLocationFromIP();
-        map.setAddressLocation(current != null ? current : new GeoPosition(-23.5505, -46.6333));
+        mapViewer.setAddressLocation(current != null ? current : new GeoPosition(-23.5505, -46.6333));
     } catch (Exception e) {
         System.out.println("Erro ao obter localização: " + e.getMessage());
-        map.setAddressLocation(new GeoPosition(-23.5505, -46.6333));
+        mapViewer.setAddressLocation(new GeoPosition(-23.5505, -46.6333));
     }
-
-    map.setZoom(16);
 
     JPanel mapWrapper = new JPanel(new BorderLayout());
     mapWrapper.add(mapComponent, BorderLayout.CENTER);
@@ -337,29 +338,30 @@ public class AlertPage extends JFrame {
         dialog.setSize(650, 500);
     });
 
-    // Ação ao clicar no mapa
-    map.addMouseListener(new MouseAdapter() {
+    // Listener para clicar no mapa e adicionar pin colorido
+    mapViewer.addMouseListener(new MouseAdapter() {
         @Override
         public void mouseClicked(MouseEvent e) {
             Point2D pt = e.getPoint();
-            Rectangle2D vp = map.getViewportBounds();
-            GeoPosition geo = map.getTileFactory().pixelToGeo(
-                new Point2D.Double(vp.getX() + pt.getX(), vp.getY() + pt.getY()),
-                map.getZoom()
-            );
+            Rectangle2D vp = mapViewer.getViewportBounds();
+            GeoPosition geo = mapViewer.getTileFactory()
+                .pixelToGeo(new Point2D.Double(vp.getX() + pt.getX(), vp.getY() + pt.getY()), mapViewer.getZoom());
             selectedPos[0] = geo;
 
-            // Cria marcador colorido conforme o nível selecionado
-            Waypoint wp = new DefaultWaypoint(geo);
-            WaypointPainter<Waypoint> painter = new WaypointPainter<>();
-            painter.setWaypoints(Set.of(wp));
-            painter.setRenderer((Graphics2D g, JXMapViewer map, Waypoint waypoint) -> {
-                Point2D mapPoint = map.convertGeoPositionToPoint(waypoint.getPosition());
-                if (mapPoint != null) {
-                    int x = (int) mapPoint.getX();
-                    int y = (int) mapPoint.getY();
+            // Cria o Waypoint e define cor conforme nível
+            Waypoint wp = new DefaultWaypoint(selectedPos[0]);
+            Set<Waypoint> waypoints = Set.of(wp);
 
-                    g.setColor(getColorForLevel(nivelField.getSelectedItem().toString()));
+            WaypointPainter<Waypoint> painter = new WaypointPainter<>();
+            painter.setWaypoints(waypoints);
+            painter.setRenderer((Graphics2D g, JXMapViewer map, Waypoint waypoint) -> {
+                Point2D pos = map.convertGeoPositionToPoint(waypoint.getPosition());
+                if (pos != null) {
+                    int x = (int) pos.getX();
+                    int y = (int) pos.getY();
+
+                    Color fillColor = getColorForLevel(nivelField.getSelectedItem().toString());
+                    g.setColor(fillColor);
                     g.fillOval(x - 6, y - 6, 12, 12);
                     g.setColor(Color.BLACK);
                     g.setStroke(new BasicStroke(2));
@@ -367,8 +369,8 @@ public class AlertPage extends JFrame {
                 }
             });
 
-            map.setOverlayPainter(painter);
-            map.repaint();
+            mapViewer.setOverlayPainter(painter);
+            mapViewer.repaint();
         }
     });
 
@@ -381,6 +383,7 @@ public class AlertPage extends JFrame {
                         String.format("%.6f", selectedPos[0].getLatitude()) + ", Lon: " +
                         String.format("%.6f", selectedPos[0].getLongitude()) + "</html>");
                     cl.show(cards, "FORM");
+                    dialog.pack();
                 });
             }).start();
         } else {
@@ -409,17 +412,14 @@ public class AlertPage extends JFrame {
     });
 
     dialog.add(cards, BorderLayout.CENTER);
-    dialog.add(new JPanel(new FlowLayout(FlowLayout.RIGHT)) {{
-        add(finalizeBtn);
-    }}, BorderLayout.SOUTH);
-
+    dialog.add(new JPanel(new FlowLayout(FlowLayout.RIGHT)) {{ add(finalizeBtn); }}, BorderLayout.SOUTH);
     dialog.pack();
     dialog.setSize(600, 450);
     dialog.setLocationRelativeTo(SwingUtilities.getWindowAncestor((Component) evt.getSource()));
     dialog.setVisible(true);
 }
 
-// Retorna a cor conforme o nível do alerta
+// Método para retornar cor baseada no nível
 private Color getColorForLevel(String nivel) {
     return switch (nivel.split(" - ")[0]) {
         case "Crítico" -> Color.RED;
@@ -428,17 +428,17 @@ private Color getColorForLevel(String nivel) {
         default -> Color.GREEN;
     };
 }
-// Consulta o endereço a partir da latitude/longitude
+// Reverse geocoding usando URLEncoder para evitar erro 400
 
 
-// Tenta localizar a posição do usuário via IP
+// Localização pelo IP
 private GeoPosition getCurrentLocationFromIP() {
     try {
         URL url = new URL("http://ip-api.com/json");
         String json = new Scanner(url.openStream()).useDelimiter("\\A").next();
         JSONObject obj = new JSONObject(json);
         return new GeoPosition(obj.getDouble("lat"), obj.getDouble("lon"));
-    } catch (IOException | JSONException e) {
+    } catch (Exception e) {
         System.out.println("Erro ao obter localização por IP: " + e.getMessage());
         return null;
     }
