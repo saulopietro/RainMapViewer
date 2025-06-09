@@ -31,10 +31,12 @@ public class UserService {
     }
 
     public UserDTO findOne(String email) {
-        Optional<User> user = repository.findByEmail(email);
-        if (user.isPresent()) {
+
+        User user = repository.findByEmail(email);
+        if (user != null) {
             return new UserDTO(user);
         }
-        throw new UserNotFoundException("Email não encontrado");
+
+        else throw new UserNotFoundException("Email não encontrado");
     }
 }

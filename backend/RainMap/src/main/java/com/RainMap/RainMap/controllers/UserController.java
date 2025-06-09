@@ -1,5 +1,6 @@
 package com.RainMap.RainMap.controllers;
 
+import com.RainMap.RainMap.controllers.exceptions.PasswordIncorrectException;
 import com.RainMap.RainMap.dto.UserDTO;
 import com.RainMap.RainMap.models.User;
 import com.RainMap.RainMap.services.UserService;
@@ -32,19 +33,16 @@ public class UserController {
     }
 
     @GetMapping
-    public ResponseEntity<List<UserDTO>> findAll() {
-        List<UserDTO> users = service.findAll();
-        return ResponseEntity.ok().body(users);
-    }
-
-    @GetMapping
-    public ResponseEntity<String> findOne(@RequestParam String email, String password) {
+    public ResponseEntity<String> findOne(@RequestParam String email,@RequestParam String password) {
         UserDTO userDTO = service.findOne(email);
 
-        if(userDTO.getPassword().matches(password)) {
-            return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body("Credenciais inválidas");
+        if (userDTO != null) {
+            if (userDTO.getPassword().matches(password)) {
+                return ResponseEntity.status(HttpStatus.ACCEPTED).body("Entrou");
+            }
+            else throw new PasswordIncorrectException("Senha incorreta");
         }
 
-        return ResponseEntity.status(HttpStatus.ACCEPTED).body("Entrou");
+        return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body("Credenciais inválidas");
     }
 }
