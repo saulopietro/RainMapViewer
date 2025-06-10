@@ -340,7 +340,7 @@ public class AlertPage extends JFrame {
     }//GEN-LAST:event_AddAlertButtonActionPerformed
 
     private void jButton2ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton2ActionPerformed
-    }//GEN-LAST:event_jButton2ActionPerformed
+excluirAlertaSelecionado();    }//GEN-LAST:event_jButton2ActionPerformed
 
     private void jButton4ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton4ActionPerformed
         carregarAlertasDoBackend("24h");
@@ -384,13 +384,44 @@ private void carregarAlertasDoBackend(String filtro) {
             double latitude = endereco.getDouble("latitude");
             double longitude = endereco.getDouble("longitude");
 
-            model.addRow(new Object[]{tipo, dataFormatada, urgencia, local, latitude, longitude});
+            model.addRow(new Object[]{alerta.getLong("id"), tipo, dataFormatada, urgencia, local, latitude, longitude});
+            AlertsTable.getColumnModel().getColumn(0).setMinWidth(0);
+            AlertsTable.getColumnModel().getColumn(0).setMaxWidth(0);
+            AlertsTable.getColumnModel().getColumn(0).setWidth(0);
         }
     } catch (Exception e) {
         JOptionPane.showMessageDialog(this, "Erro ao carregar alertas: " + e.getMessage(), "Erro", JOptionPane.ERROR_MESSAGE);
         e.printStackTrace();
     }
+    
+    
 }
+
+private void excluirAlertaSelecionado() {
+    int linhaSelecionada = AlertsTable.getSelectedRow();
+
+    if (linhaSelecionada == -1) {
+        JOptionPane.showMessageDialog(this, "Selecione um alerta para excluir.", "Aviso", JOptionPane.WARNING_MESSAGE);
+        return;
+    }
+
+    Long idAlerta = Long.parseLong(AlertsTable.getValueAt(linhaSelecionada, 0).toString());
+
+    int confirm = JOptionPane.showConfirmDialog(this, "Tem certeza que deseja excluir este alerta?", "Confirmação", JOptionPane.YES_NO_OPTION);
+    if (confirm == JOptionPane.YES_OPTION) {
+        try {
+            ApiClient.delete("alert/" + idAlerta);
+            carregarAlertasDoBackend(null);
+            AlertsTable.repaint();
+            JOptionPane.showMessageDialog(this, "Alerta excluído com sucesso.");
+        } catch (Exception ex) {
+            JOptionPane.showMessageDialog(this, "Erro ao excluir alerta: " + ex.getMessage(), "Erro", JOptionPane.ERROR_MESSAGE);
+            ex.printStackTrace();
+        }
+    }
+}
+
+
 
     public static void main(String[] args) {
     java.awt.EventQueue.invokeLater(() -> {

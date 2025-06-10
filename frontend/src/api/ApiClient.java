@@ -61,5 +61,20 @@ public class ApiClient {
 
         return response.toString();
     }
+    
+    public static void delete(String endpoint) throws IOException {
+    URL url = new URL("http://localhost:8080/" + endpoint);
+    HttpURLConnection conn = (HttpURLConnection) url.openConnection();
+    conn.setRequestMethod("DELETE");
+    conn.setRequestProperty("Accept", "application/json");
+
+    int responseCode = conn.getResponseCode();
+    if (responseCode != HttpURLConnection.HTTP_NO_CONTENT) {
+        throw new RuntimeException("Erro ao excluir alerta. Código HTTP: " + responseCode);
+    }
+
+    conn.disconnect();
+}
+
 }
 

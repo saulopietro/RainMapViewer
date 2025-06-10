@@ -13,6 +13,7 @@ import org.springframework.web.bind.annotation.*;
 import org.springframework.web.servlet.support.ServletUriComponentsBuilder;
 
 import java.net.URI;
+import java.sql.Timestamp;
 import java.util.List;
 
 @RestController
@@ -35,10 +36,15 @@ public class AlertController {
     }
 
     @GetMapping
-    public ResponseEntity<List<AlertDTO>> findAll() {
-        List<AlertDTO> alerts = service.findAll();
+    public ResponseEntity<List<AlertDTO>> findAll(@RequestParam(required = false) String filtro) {
+        List<AlertDTO> alerts = service.findAll(filtro);
 
         return ResponseEntity.ok().body(alerts);
     }
 
+    @DeleteMapping("/{id}")
+    public ResponseEntity delete(@PathVariable("id") Long id) {
+        service.delete(id);
+        return new ResponseEntity<>(HttpStatus.NO_CONTENT);
+    }
 }
