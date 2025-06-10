@@ -1,25 +1,20 @@
-package com.RainMap.RainMap.models;
+package com.RainMap.RainMap.dto;
 
-import jakarta.persistence.*;
+import com.RainMap.RainMap.models.Address;
+import com.RainMap.RainMap.models.Alert;
+import com.RainMap.RainMap.models.User;
 
 import java.sql.Timestamp;
 
-@Entity
-@Table(name = "tb_alert")
-public class Alert {
+public class AlertDTO {
 
-    @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
-
-    private Timestamp data;
     private String tipoOcorrencia;
     private String urgencia;
-
-    @OneToOne
+    private Timestamp data;
     private Address address;
 
-    public Alert(Long id, String tipoOcorrencia, String urgencia, Address address, Timestamp data) {
+    public AlertDTO(Long id, String tipoOcorrencia, String urgencia, Address address, Timestamp data) {
         this.id = id;
         this.tipoOcorrencia = tipoOcorrencia;
         this.urgencia = urgencia;
@@ -27,14 +22,15 @@ public class Alert {
         this.data = data;
     }
 
-    public Alert(String tipoOcorrencia, String urgencia, Address address, Timestamp data) {
-        this.tipoOcorrencia = tipoOcorrencia;
-        this.urgencia = urgencia;
-        this.address = address;
-        this.data = data;
+    public AlertDTO() {
     }
 
-    public Alert() {
+    public AlertDTO(Alert alert) {
+        id = alert.getId();
+        tipoOcorrencia = alert.getTipoOcorrencia();
+        urgencia = alert.getUrgencia();
+        address = alert.getAddress();
+        data = alert.getData();
     }
 
     public Long getId() {

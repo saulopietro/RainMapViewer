@@ -11,20 +11,25 @@ public class Address {
     private Long id;
 
     private String endereco;
-    private Integer numero;
-    private String bairro;
+    private Double latitude;
+    private Double longitude;
 
-    public Address(Long id, String endereco, Integer numero, String bairro) {
+    @OneToOne
+    private Alert alert;
+
+    public Address(Long id, String endereco, Double latitude, Double longitude, Alert alert) {
         this.id = id;
         this.endereco = endereco;
-        this.numero = numero;
-        this.bairro = bairro;
+        this.latitude = latitude;
+        this.longitude = longitude;
+        this.alert = alert;
     }
 
-    public Address(String endereco, Integer numero, String bairro) {
+    public Address(String endereco ,Double latitude, Double longitude, Alert alert) {
         this.endereco = endereco;
-        this.numero = numero;
-        this.bairro = bairro;
+        this.latitude = latitude;
+        this.longitude = longitude;
+        this.alert = alert;
     }
 
     public Address() {
@@ -38,6 +43,22 @@ public class Address {
         this.id = id;
     }
 
+    public Double getLatitude() {
+        return latitude;
+    }
+
+    public void setLatitude(Double latitude) {
+        this.latitude = latitude;
+    }
+
+    public Double getLongitude() {
+        return longitude;
+    }
+
+    public void setLongitude(Double longitude) {
+        this.longitude = longitude;
+    }
+
     public String getEndereco() {
         return endereco;
     }
@@ -46,20 +67,11 @@ public class Address {
         this.endereco = endereco;
     }
 
-    public Integer getNumero() {
-        return numero;
+    public Alert getAlert() {
+        return alert;
     }
 
-    public void setNumero(Integer numero) {
-        this.numero = numero;
+    public void setAlert(Alert alert) {
+        this.alert = alert;
     }
-
-    public String getBairro() {
-        return bairro;
-    }
-
-    public void setBairro(String bairro) {
-        this.bairro = bairro;
-    }
-
 }
