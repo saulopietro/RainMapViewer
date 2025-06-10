@@ -217,7 +217,10 @@ public class AlertPage extends JFrame {
         AddAlertButton.setHorizontalTextPosition(javax.swing.SwingConstants.LEFT);
         AddAlertButton.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
-                AddAlertButtonActionPerformed(evt);
+                // === Ação para abrir a JDialog AdicionarAlerta ===
+                AdicionarAlerta dialog = new AdicionarAlerta((java.awt.Frame) javax.swing.SwingUtilities.getWindowAncestor(AddAlertButton), true);
+                dialog.setLocationRelativeTo(AddAlertButton); // centraliza em relação ao botão
+                dialog.setVisible(true);
             }
         });
 
@@ -323,10 +326,6 @@ public class AlertPage extends JFrame {
     private void MapaPanelMouseExited(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_MapaPanelMouseExited
         MapaPanel.setBackground(SideMenuPanel.getBackground().brighter());
     }//GEN-LAST:event_MapaPanelMouseExited
-
-    private void AddAlertButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_AddAlertButtonActionPerformed
-        // TODO add your handling code here:
-    }//GEN-LAST:event_AddAlertButtonActionPerformed
 
     private void jButton2ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton2ActionPerformed
         // TODO add your handling code here:
