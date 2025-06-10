@@ -125,7 +125,7 @@
             <EventHandler event="actionPerformed" listener="java.awt.event.ActionListener" parameters="java.awt.event.ActionEvent" handler="DefinirMapButtonActionPerformed"/>
           </Events>
           <AuxValues>
-            <AuxValue name="JavaCodeGenerator_InitCodePost" type="java.lang.String" value="// ------&#xa;DefinirMapButton.addActionListener(new java.awt.event.ActionListener() {&#xa;    public void actionPerformed(java.awt.event.ActionEvent evt) {&#xa;        // === A&#xe7;&#xe3;o para abrir a JDialog view.AddAlertMapView ===&#xa;        view.AddAlertMapView dialog = new view.AddAlertMapView((java.awt.Dialog) javax.swing.SwingUtilities.getWindowAncestor(DefinirMapButton), true);&#xa;        dialog.setLocationRelativeTo(DefinirMapButton); // Centraliza em rela&#xe7;&#xe3;o ao bot&#xe3;o&#xa;        dialog.setVisible(true);&#xa;    }&#xa;});"/>
+            <AuxValue name="JavaCodeGenerator_InitCodePost" type="java.lang.String" value="// ------&#xa;DefinirMapButton.addActionListener(new java.awt.event.ActionListener() {&#xa;    public void actionPerformed(java.awt.event.ActionEvent evt) {&#xa;        // === A&#xe7;&#xe3;o para abrir a JDialog view.WaypointSelection ===&#xa;        view.WaypointSelection dialog = new view.WaypointSelection((java.awt.Dialog) javax.swing.SwingUtilities.getWindowAncestor(DefinirMapButton), true);&#xa;        dialog.setLocationRelativeTo(DefinirMapButton); // Centraliza em rela&#xe7;&#xe3;o ao bot&#xe3;o&#xa;        dialog.setVisible(true);&#xa;    }&#xa;});"/>
           </AuxValues>
         </Component>
         <Component class="javax.swing.JComboBox" name="jComboBox2">

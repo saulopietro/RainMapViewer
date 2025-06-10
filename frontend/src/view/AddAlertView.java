@@ -12,14 +12,14 @@ import javax.swing.SwingUtilities;
  *
  * @author alway
  */
-public class AdicionarAlertaView extends javax.swing.JDialog {
+public class AddAlertView extends javax.swing.JDialog {
 
     /**
      * Creates new form AdicionarAlerta
      * @param parent
      * @param modal
      */
-    public AdicionarAlertaView(java.awt.Frame parent, boolean modal) {
+    public AddAlertView(java.awt.Frame parent, boolean modal) {
         super(parent, modal);
         initComponents();
     }
@@ -57,8 +57,8 @@ public class AdicionarAlertaView extends javax.swing.JDialog {
         // ------
         DefinirMapButton.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
-                // === Ação para abrir a JDialog AddAlertMapView ===
-                AddAlertMapView dialog = new AddAlertMapView((java.awt.Dialog) javax.swing.SwingUtilities.getWindowAncestor(DefinirMapButton), true);
+                // === Ação para abrir a JDialog view.WaypointSelection ===
+                view.WaypointSelection dialog = new view.WaypointSelection((java.awt.Dialog) javax.swing.SwingUtilities.getWindowAncestor(DefinirMapButton), true);
                 dialog.setLocationRelativeTo(DefinirMapButton); // Centraliza em relação ao botão
                 dialog.setVisible(true);
             }
@@ -165,7 +165,7 @@ public class AdicionarAlertaView extends javax.swing.JDialog {
 
     private void DefinirMapButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_DefinirMapButtonActionPerformed
     Window parentWindow = SwingUtilities.getWindowAncestor(DefinirMapButton);
-    AddAlertMapView dialog = new AddAlertMapView(parentWindow, true);
+    WaypointSelection dialog = new WaypointSelection(parentWindow, true);
 
     // Passando os dados preenchidos no formulário
     dialog.setTipoOcorrencia(getTipoOcorrencia());
@@ -224,8 +224,10 @@ public String getUrgencia() {
                 }
             }
         } catch (ClassNotFoundException | InstantiationException | IllegalAccessException | javax.swing.UnsupportedLookAndFeelException ex) {
-            java.util.logging.Logger.getLogger(AdicionarAlertaView.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
+            java.util.logging.Logger.getLogger(AddAlertView.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
         }
+        //</editor-fold>
+        //</editor-fold>
         //</editor-fold>
         //</editor-fold>
         
@@ -233,7 +235,7 @@ public String getUrgencia() {
 
         /* Create and display the dialog */
         java.awt.EventQueue.invokeLater(() -> {
-            AdicionarAlertaView dialog = new AdicionarAlertaView(new javax.swing.JFrame(), true);
+            AddAlertView dialog = new AddAlertView(new javax.swing.JFrame(), true);
             dialog.addWindowListener(new java.awt.event.WindowAdapter() {
                 @Override
                 public void windowClosing(java.awt.event.WindowEvent e) {

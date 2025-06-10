@@ -7,9 +7,16 @@ package view;
 import api.ApiClient;
 import java.awt.BorderLayout;
 import java.awt.Dimension;
+import java.awt.event.MouseAdapter;
+import java.awt.event.MouseEvent;
+import java.awt.geom.Point2D;
+import java.util.HashMap;
 import java.util.HashSet;
+import java.util.Map;
 import java.util.Set;
+import javax.swing.JLabel;
 import javax.swing.JOptionPane;
+import javax.swing.JPanel;
 import org.json.JSONArray;
 import org.json.JSONObject;
 import org.jxmapviewer.JXMapViewer;
@@ -104,6 +111,7 @@ public class MainView extends javax.swing.JFrame {
         JSONArray alertas = new JSONArray(response.trim());
 
         Set<Waypoint> waypoints = new HashSet<>();
+        Map<Waypoint, JSONObject> waypointToAlertMap = new HashMap<>();
 
         for (int i = 0; i < alertas.length(); i++) {
             JSONObject alerta = alertas.getJSONObject(i);
@@ -113,17 +121,92 @@ public class MainView extends javax.swing.JFrame {
             double longitude = endereco.getDouble("longitude");
 
             GeoPosition pos = new GeoPosition(latitude, longitude);
-            waypoints.add(new DefaultWaypoint(pos));
+            DefaultWaypoint waypoint = new DefaultWaypoint(pos);
+            waypoints.add(waypoint);
+            waypointToAlertMap.put(waypoint, alerta);
         }
 
         WaypointPainter<Waypoint> painter = new WaypointPainter<>();
         painter.setWaypoints(waypoints);
 
+        // Adiciona o listener de clique
+        map.addMouseListener(new MouseAdapter() {
+    @Override
+    public void mouseClicked(MouseEvent e) {
+        if (e.getButton() == MouseEvent.BUTTON1) {
+            // Converte coordenada de tela para posição geográfica
+            GeoPosition geoPosition = map.convertPointToGeoPosition(e.getPoint());
+            
+            // Encontra o waypoint mais próximo
+            Waypoint clickedWaypoint = null;
+            double minDistance = Double.MAX_VALUE;
+            final int TOLERANCE_PIXELS = 20; // Tolerância de 20 pixels
+            
+            for (Waypoint wp : waypoints) {
+                Point2D wpPoint = map.getTileFactory().geoToPixel(wp.getPosition(), map.getZoom());
+                double distance = e.getPoint().distance(wpPoint);
+                
+                if (distance < TOLERANCE_PIXELS && distance < minDistance) {
+                    minDistance = distance;
+                    clickedWaypoint = wp;
+                }
+            }
+            
+            if (clickedWaypoint != null) {
+                JSONObject alerta = waypointToAlertMap.get(clickedWaypoint);
+                mostrarDetalhesAlerta(alerta);
+                
+                // Opcional: centralizar no waypoint clicado
+                map.setCenterPosition(clickedWaypoint.getPosition());
+                map.setZoom(map.getZoom() + 1); // Dá um zoom in
+                map.setZoom(map.getZoom() - 1); // E volta (efeito de destaque)
+            }
+        }
+    }
+});
+
         map.setOverlayPainter(painter);
 
     } catch (Exception e) {
-        JOptionPane.showMessageDialog(this, "Erro ao carregar pins: " + e.getMessage(), "Erro", JOptionPane.ERROR_MESSAGE);
+        JOptionPane.showMessageDialog(this, "Erro ao carregar pins: " + e.getMessage(), 
+            "Erro", JOptionPane.ERROR_MESSAGE);
         e.printStackTrace();
+    }
+}
+    
+    private void mostrarDetalhesAlerta(JSONObject alerta) {
+    try {
+        // Extrai os dados do alerta
+        String titulo = alerta.getString("title");
+        String descricao = alerta.getString("description");
+        String severidade = alerta.getString("severity");
+        String data = alerta.getString("date");
+        
+        JSONObject endereco = alerta.getJSONObject("address");
+        String rua = endereco.getString("street");
+        String cidade = endereco.getString("city");
+        
+        // Formata a mensagem
+        String mensagem = String.format(
+            "<html><b>Título:</b> %s<br>" +
+            "<b>Descrição:</b> %s<br>" +
+            "<b>Severidade:</b> %s<br>" +
+            "<b>Data:</b> %s<br>" +
+            "<b>Local:</b> %s, %s</html>",
+            titulo, descricao, severidade, data, rua, cidade);
+        
+        // Cria um painel personalizado para melhor formatação
+        JPanel panel = new JPanel(new BorderLayout());
+        panel.add(new JLabel(mensagem), BorderLayout.CENTER);
+        panel.setPreferredSize(new Dimension(300, 200));
+        
+        // Mostra o diálogo
+        JOptionPane.showMessageDialog(this, panel, "Detalhes do Alerta", 
+            JOptionPane.INFORMATION_MESSAGE);
+            
+    } catch (Exception e) {
+        JOptionPane.showMessageDialog(this, "Erro ao exibir detalhes: " + e.getMessage(),
+            "Erro", JOptionPane.ERROR_MESSAGE);
     }
 }
 

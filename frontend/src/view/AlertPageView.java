@@ -135,8 +135,8 @@ public class AlertPageView extends JFrame {
         AddAlertButton.setHorizontalTextPosition(javax.swing.SwingConstants.LEFT);
         AddAlertButton.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
-                // === Ação para abrir a JDialog AdicionarAlertaView ===
-                AdicionarAlertaView dialog = new AdicionarAlertaView((java.awt.Frame) javax.swing.SwingUtilities.getWindowAncestor(AddAlertButton), true);
+                // === Ação para abrir a JDialog AddAlertView ===
+                AddAlertView dialog = new AddAlertView((java.awt.Frame) javax.swing.SwingUtilities.getWindowAncestor(AddAlertButton), true);
                 dialog.setLocationRelativeTo(AddAlertButton); // centraliza em relação ao botão
                 dialog.setVisible(true);
             }

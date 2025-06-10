@@ -20,7 +20,7 @@ import org.json.JSONObject;
  *
  * @author alway
  */
-public class AddAlertMapView extends javax.swing.JDialog {
+public class WaypointSelection extends javax.swing.JDialog {
     
     private String tipoOcorrencia;
     private String urgencia;
@@ -47,7 +47,7 @@ public class AddAlertMapView extends javax.swing.JDialog {
      * @param parent
      * @param modal
      */
-    public AddAlertMapView(java.awt.Window parent, boolean modal) {
+    public WaypointSelection(java.awt.Window parent, boolean modal) {
     super(parent); // JDialog(Window owner)
     initComponents();
     setModal(modal); // define modalidade se necessário
@@ -224,9 +224,9 @@ public class AddAlertMapView extends javax.swing.JDialog {
                     TextAreaAddress.setText(endereco);
 
                     // *** AQUI: salva nas variáveis da classe ***
-                    AddAlertMapView.this.latitude = geo.getLatitude();
-                    AddAlertMapView.this.longitude = geo.getLongitude();
-                    AddAlertMapView.this.nomeRua = endereco;
+                    WaypointSelection.this.latitude = geo.getLatitude();
+                    WaypointSelection.this.longitude = geo.getLongitude();
+                    WaypointSelection.this.nomeRua = endereco;
 
                 } catch (Exception ex) {
                     TextAreaAddress.setText("Erro ao buscar endereço: " + ex.getMessage());
@@ -329,21 +329,23 @@ System.out.println("longitude = " + longitude);
                 }
             }
         } catch (ClassNotFoundException ex) {
-            java.util.logging.Logger.getLogger(AddAlertMapView.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
+            java.util.logging.Logger.getLogger(WaypointSelection.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
         } catch (InstantiationException ex) {
-            java.util.logging.Logger.getLogger(AddAlertMapView.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
+            java.util.logging.Logger.getLogger(WaypointSelection.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
         } catch (IllegalAccessException ex) {
-            java.util.logging.Logger.getLogger(AddAlertMapView.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
+            java.util.logging.Logger.getLogger(WaypointSelection.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
         } catch (javax.swing.UnsupportedLookAndFeelException ex) {
-            java.util.logging.Logger.getLogger(AddAlertMapView.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
+            java.util.logging.Logger.getLogger(WaypointSelection.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
         }
+        //</editor-fold>
+        //</editor-fold>
         //</editor-fold>
         //</editor-fold>
 
         /* Create and display the dialog */
         java.awt.EventQueue.invokeLater(new Runnable() {
             public void run() {
-                AddAlertMapView dialog = new AddAlertMapView(new javax.swing.JFrame(), true);
+                WaypointSelection dialog = new WaypointSelection(new javax.swing.JFrame(), true);
                 dialog.addWindowListener(new java.awt.event.WindowAdapter() {
                     @Override
                     public void windowClosing(java.awt.event.WindowEvent e) {

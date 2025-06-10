@@ -227,7 +227,7 @@
             <Property name="horizontalTextPosition" type="int" value="2"/>
           </Properties>
           <AuxValues>
-            <AuxValue name="JavaCodeGenerator_InitCodePost" type="java.lang.String" value="AddAlertButton.addActionListener(new java.awt.event.ActionListener() {&#xa;    public void actionPerformed(java.awt.event.ActionEvent evt) {&#xa;        // === A&#xe7;&#xe3;o para abrir a JDialog view.AdicionarAlertaView ===&#xa;        view.AdicionarAlertaView dialog = new view.AdicionarAlertaView((java.awt.Frame) javax.swing.SwingUtilities.getWindowAncestor(AddAlertButton), true);&#xa;        dialog.setLocationRelativeTo(AddAlertButton); // centraliza em rela&#xe7;&#xe3;o ao bot&#xe3;o&#xa;        dialog.setVisible(true);&#xa;    }&#xa;});"/>
+            <AuxValue name="JavaCodeGenerator_InitCodePost" type="java.lang.String" value="AddAlertButton.addActionListener(new java.awt.event.ActionListener() {&#xa;    public void actionPerformed(java.awt.event.ActionEvent evt) {&#xa;        // === A&#xe7;&#xe3;o para abrir a JDialog view.AddAlertView ===&#xa;        view.AddAlertView dialog = new view.AddAlertView((java.awt.Frame) javax.swing.SwingUtilities.getWindowAncestor(AddAlertButton), true);&#xa;        dialog.setLocationRelativeTo(AddAlertButton); // centraliza em rela&#xe7;&#xe3;o ao bot&#xe3;o&#xa;        dialog.setVisible(true);&#xa;    }&#xa;});"/>
           </AuxValues>
         </Component>
         <Component class="javax.swing.JButton" name="jButton3">
