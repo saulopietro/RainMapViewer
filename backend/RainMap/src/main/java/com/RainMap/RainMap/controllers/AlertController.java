@@ -47,4 +47,5 @@ public class AlertController {
         service.delete(id);
         return new ResponseEntity<>(HttpStatus.NO_CONTENT);
     }
+
 }

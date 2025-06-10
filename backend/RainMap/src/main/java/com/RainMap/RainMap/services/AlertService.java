@@ -1,6 +1,7 @@
 package com.RainMap.RainMap.services;
 
 import com.RainMap.RainMap.dto.AlertDTO;
+import com.RainMap.RainMap.models.Address;
 import com.RainMap.RainMap.models.Alert;
 import com.RainMap.RainMap.repositories.AlertRepository;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -18,8 +19,14 @@ public class AlertService {
     private AlertRepository repository;
 
     public AlertDTO insert(AlertDTO dto) {
+        String enderecoOriginal = dto.getAddress().getEndereco(); // endereço vindo da requisição
+        int maxLength = 255;
 
-        Alert alert = new Alert(dto.getTipoOcorrencia(), dto.getUrgencia(), dto.getAddress(), dto.getData());
+        if (enderecoOriginal.length() > maxLength) {
+            enderecoOriginal = enderecoOriginal.substring(0, maxLength);
+        }
+
+        Alert alert = new Alert(dto.getTipoOcorrencia(), dto.getUrgencia(), new Address(enderecoOriginal, dto.getAddress().getLatitude(), dto.getAddress().getLongitude()), dto.getData());
 
         repository.save(alert);
 

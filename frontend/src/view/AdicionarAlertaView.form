@@ -65,7 +65,7 @@
                           <EmptySpace min="-2" pref="38" max="-2" attributes="0"/>
                           <Group type="103" groupAlignment="0" attributes="0">
                               <Component id="jComboBox3" min="-2" pref="178" max="-2" attributes="0"/>
-                              <Component id="jButton1" alignment="1" min="-2" pref="178" max="-2" attributes="0"/>
+                              <Component id="DefinirMapButton" alignment="1" min="-2" pref="178" max="-2" attributes="0"/>
                           </Group>
                       </Group>
                   </Group>
@@ -94,7 +94,7 @@
                   <EmptySpace min="-2" pref="30" max="-2" attributes="0"/>
                   <Group type="103" groupAlignment="3" attributes="0">
                       <Component id="jLabel4" alignment="3" min="-2" max="-2" attributes="0"/>
-                      <Component id="jButton1" alignment="3" min="-2" max="-2" attributes="0"/>
+                      <Component id="DefinirMapButton" alignment="3" min="-2" max="-2" attributes="0"/>
                   </Group>
                   <EmptySpace pref="80" max="32767" attributes="0"/>
               </Group>
@@ -110,7 +110,7 @@
             <Property name="text" type="java.lang.String" value="Localiza&#xe7;&#xe3;o"/>
           </Properties>
         </Component>
-        <Component class="javax.swing.JButton" name="jButton1">
+        <Component class="javax.swing.JButton" name="DefinirMapButton">
           <Properties>
             <Property name="font" type="java.awt.Font" editor="org.netbeans.beaninfo.editors.FontEditor">
               <Font name="Segoe UI" size="14" style="0"/>
@@ -122,8 +122,11 @@
             <Property name="iconTextGap" type="int" value="7"/>
           </Properties>
           <Events>
-            <EventHandler event="actionPerformed" listener="java.awt.event.ActionListener" parameters="java.awt.event.ActionEvent" handler="jButton1ActionPerformed"/>
+            <EventHandler event="actionPerformed" listener="java.awt.event.ActionListener" parameters="java.awt.event.ActionEvent" handler="DefinirMapButtonActionPerformed"/>
           </Events>
+          <AuxValues>
+            <AuxValue name="JavaCodeGenerator_InitCodePost" type="java.lang.String" value="// ------&#xa;DefinirMapButton.addActionListener(new java.awt.event.ActionListener() {&#xa;    public void actionPerformed(java.awt.event.ActionEvent evt) {&#xa;        // === A&#xe7;&#xe3;o para abrir a JDialog view.AddAlertMapView ===&#xa;        view.AddAlertMapView dialog = new view.AddAlertMapView((java.awt.Dialog) javax.swing.SwingUtilities.getWindowAncestor(DefinirMapButton), true);&#xa;        dialog.setLocationRelativeTo(DefinirMapButton); // Centraliza em rela&#xe7;&#xe3;o ao bot&#xe3;o&#xa;        dialog.setVisible(true);&#xa;    }&#xa;});"/>
+          </AuxValues>
         </Component>
         <Component class="javax.swing.JComboBox" name="jComboBox2">
           <Properties>
@@ -172,7 +175,7 @@
         <Component class="javax.swing.JSpinner" name="jSpinner1">
           <Properties>
             <Property name="model" type="javax.swing.SpinnerModel" editor="org.netbeans.modules.form.editors2.SpinnerModelEditor">
-              <SpinnerModel initial="now" stepSize="5" type="date"/>
+              <SpinnerModel initial="now" stepSize="7" type="date"/>
             </Property>
           </Properties>
         </Component>

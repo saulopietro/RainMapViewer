@@ -18,9 +18,7 @@ import javax.swing.*;
 import java.awt.event.*;
 import java.awt.geom.Point2D;
 import java.awt.geom.Rectangle2D;
-import java.io.BufferedReader;
 import java.io.IOException;
-import java.io.InputStreamReader;
 import java.net.HttpURLConnection;
 import java.net.URL;
 import java.net.URLEncoder;
@@ -45,18 +43,25 @@ import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 import view.components.MapComponent;
+import view.components.SideMenuComponent;
 
 /**
  *
  * @author alway
  */
-public class AlertPage extends JFrame {
+public class AlertPageView extends JFrame {
 
     /**
      * Creates new form MainPage
      */
-    public AlertPage() {
+    public AlertPageView() {
         initComponents();
+
+        SideMenuComponent sideMenu = new SideMenuComponent();
+        Background.setLayout(new BorderLayout());
+        Background.add(sideMenu, BorderLayout.WEST);
+
+
         carregarAlertasDoBackend(null); // Carrega todos os alertas ao abrir
 
     }
@@ -73,16 +78,6 @@ public class AlertPage extends JFrame {
         Background = new javax.swing.JPanel();
         jScrollPane1 = new javax.swing.JScrollPane();
         AlertsTable = new javax.swing.JTable();
-        SideMenuPanel = new javax.swing.JPanel();
-        PerfilPanel = new javax.swing.JPanel();
-        jLabel2 = new javax.swing.JLabel();
-        jLabel7 = new javax.swing.JLabel();
-        AlertasPanel = new javax.swing.JPanel();
-        jLabel6 = new javax.swing.JLabel();
-        jLabel5 = new javax.swing.JLabel();
-        MapaPanel = new javax.swing.JPanel();
-        jLabel4 = new javax.swing.JLabel();
-        jLabel3 = new javax.swing.JLabel();
         jLabel1 = new javax.swing.JLabel();
         jButton2 = new javax.swing.JButton();
         AddAlertButton = new javax.swing.JButton();
@@ -97,16 +92,16 @@ public class AlertPage extends JFrame {
 
         AlertsTable.setModel(new javax.swing.table.DefaultTableModel(
             new Object [][] {
-                {"Alagamento", "22:30", "Crítico", "Rua 19 de Novembro", null, null},
-                {"Engarrafamento", "17:00", "Médio", "Ponte Estaiada", null, null},
-                {"Alagamento", "15:00", "Baixo", "Avenida Brasil", null, null}
+                {null, "Alagamento", "22:30", "Crítico", "Rua 19 de Novembro", null, null},
+                {null, "Engarrafamento", "17:00", "Médio", "Ponte Estaiada", null, null},
+                {null, "Alagamento", "15:00", "Baixo", "Avenida Brasil", null, null}
             },
             new String [] {
-                "Tipo", "Hora", "Nível", "Local", "Latitude", "Longitude"
+                "ID", "Tipo", "Hora", "Nível", "Local", "Latitude", "Longitude"
             }
         ) {
             Class[] types = new Class [] {
-                java.lang.String.class, java.lang.String.class, java.lang.String.class, java.lang.String.class, java.lang.String.class, java.lang.String.class
+                java.lang.Long.class, java.lang.String.class, java.lang.String.class, java.lang.String.class, java.lang.String.class, java.lang.String.class, java.lang.String.class
             };
 
             public Class getColumnClass(int columnIndex) {
@@ -114,93 +109,6 @@ public class AlertPage extends JFrame {
             }
         });
         jScrollPane1.setViewportView(AlertsTable);
-
-        SideMenuPanel.setBackground(new java.awt.Color(255, 255, 255));
-        SideMenuPanel.setPreferredSize(new java.awt.Dimension(200, 300));
-        SideMenuPanel.setRequestFocusEnabled(false);
-
-        PerfilPanel.setBackground(new java.awt.Color(255, 255, 255));
-        PerfilPanel.setCursor(new java.awt.Cursor(java.awt.Cursor.DEFAULT_CURSOR));
-        PerfilPanel.setPreferredSize(new java.awt.Dimension(143, 90));
-        PerfilPanel.addMouseListener(new java.awt.event.MouseAdapter() {
-            public void mouseEntered(java.awt.event.MouseEvent evt) {
-                PerfilPanelMouseEntered(evt);
-            }
-            public void mouseExited(java.awt.event.MouseEvent evt) {
-                PerfilPanelMouseExited(evt);
-            }
-        });
-        PerfilPanel.setLayout(new org.netbeans.lib.awtextra.AbsoluteLayout());
-
-        jLabel2.setFont(new java.awt.Font("Segoe UI", 0, 24)); // NOI18N
-        jLabel2.setText("Perfil");
-        PerfilPanel.add(jLabel2, new org.netbeans.lib.awtextra.AbsoluteConstraints(90, 20, -1, -1));
-
-        jLabel7.setIcon(new javax.swing.ImageIcon(getClass().getResource("/img/wdffTCL6rzidQAAAABJRU5ErkJggg.png"))); // NOI18N
-        PerfilPanel.add(jLabel7, new org.netbeans.lib.awtextra.AbsoluteConstraints(30, 20, -1, -1));
-
-        AlertasPanel.setBackground(new java.awt.Color(255, 255, 255));
-        AlertasPanel.setCursor(new java.awt.Cursor(java.awt.Cursor.DEFAULT_CURSOR));
-        AlertasPanel.setPreferredSize(new java.awt.Dimension(143, 90));
-        AlertasPanel.addMouseListener(new java.awt.event.MouseAdapter() {
-            public void mouseEntered(java.awt.event.MouseEvent evt) {
-                AlertasPanelMouseEntered(evt);
-            }
-            public void mouseExited(java.awt.event.MouseEvent evt) {
-                AlertasPanelMouseExited(evt);
-            }
-        });
-        AlertasPanel.setLayout(new org.netbeans.lib.awtextra.AbsoluteLayout());
-
-        jLabel6.setIcon(new javax.swing.ImageIcon(getClass().getResource("/img/w9FOGLn501GZgAAAABJRU5ErkJggg.png"))); // NOI18N
-        AlertasPanel.add(jLabel6, new org.netbeans.lib.awtextra.AbsoluteConstraints(30, 20, -1, -1));
-
-        jLabel5.setFont(new java.awt.Font("Segoe UI", 0, 24)); // NOI18N
-        jLabel5.setText("Alertas");
-        AlertasPanel.add(jLabel5, new org.netbeans.lib.awtextra.AbsoluteConstraints(90, 20, -1, 30));
-
-        MapaPanel.setBackground(new java.awt.Color(255, 255, 255));
-        MapaPanel.setCursor(new java.awt.Cursor(java.awt.Cursor.DEFAULT_CURSOR));
-        MapaPanel.setRequestFocusEnabled(false);
-        MapaPanel.addMouseListener(new java.awt.event.MouseAdapter() {
-            public void mouseEntered(java.awt.event.MouseEvent evt) {
-                MapaPanelMouseEntered(evt);
-            }
-            public void mouseExited(java.awt.event.MouseEvent evt) {
-                MapaPanelMouseExited(evt);
-            }
-        });
-        MapaPanel.setLayout(new org.netbeans.lib.awtextra.AbsoluteLayout());
-
-        jLabel4.setIcon(new javax.swing.ImageIcon(getClass().getResource("/img/CfCqj5bgJAGChpNqi7Ii4AYBEmPXtUjQ6JqQHfRQgKDRQ2wOhQACCCCAgNcECBpW1DhPbFaosk8EEEAAAQcKWBM0EPrwKZAkRFwlwC3IXfVJ2fjXAFrgoZzPSg5AggggAACCJgo8FyYtMDl4b6IQAAAABJRU5ErkJggg.png"))); // NOI18N
-        jLabel4.setCursor(new java.awt.Cursor(java.awt.Cursor.DEFAULT_CURSOR));
-        MapaPanel.add(jLabel4, new org.netbeans.lib.awtextra.AbsoluteConstraints(30, 20, -1, -1));
-
-        jLabel3.setFont(new java.awt.Font("Segoe UI", 0, 24)); // NOI18N
-        jLabel3.setText("Mapa");
-        jLabel3.setCursor(new java.awt.Cursor(java.awt.Cursor.DEFAULT_CURSOR));
-        MapaPanel.add(jLabel3, new org.netbeans.lib.awtextra.AbsoluteConstraints(90, 20, 61, 30));
-
-        javax.swing.GroupLayout SideMenuPanelLayout = new javax.swing.GroupLayout(SideMenuPanel);
-        SideMenuPanel.setLayout(SideMenuPanelLayout);
-        SideMenuPanelLayout.setHorizontalGroup(
-            SideMenuPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGroup(SideMenuPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.CENTER)
-                .addComponent(PerfilPanel, javax.swing.GroupLayout.PREFERRED_SIZE, 200, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addComponent(AlertasPanel, javax.swing.GroupLayout.PREFERRED_SIZE, 200, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addComponent(MapaPanel, javax.swing.GroupLayout.PREFERRED_SIZE, 200, javax.swing.GroupLayout.PREFERRED_SIZE))
-        );
-        SideMenuPanelLayout.setVerticalGroup(
-            SideMenuPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGroup(SideMenuPanelLayout.createSequentialGroup()
-                .addGap(162, 162, 162)
-                .addComponent(MapaPanel, javax.swing.GroupLayout.PREFERRED_SIZE, 74, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addGap(6, 6, 6)
-                .addComponent(AlertasPanel, javax.swing.GroupLayout.PREFERRED_SIZE, 74, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addGap(6, 6, 6)
-                .addComponent(PerfilPanel, javax.swing.GroupLayout.PREFERRED_SIZE, 74, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
-        );
 
         jLabel1.setFont(new java.awt.Font("Segoe UI", 1, 36)); // NOI18N
         jLabel1.setText("Alertas");
@@ -227,7 +135,10 @@ public class AlertPage extends JFrame {
         AddAlertButton.setHorizontalTextPosition(javax.swing.SwingConstants.LEFT);
         AddAlertButton.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
-                AddAlertButtonActionPerformed(evt);
+                // === Ação para abrir a JDialog AdicionarAlertaView ===
+                AdicionarAlertaView dialog = new AdicionarAlertaView((java.awt.Frame) javax.swing.SwingUtilities.getWindowAncestor(AddAlertButton), true);
+                dialog.setLocationRelativeTo(AddAlertButton); // centraliza em relação ao botão
+                dialog.setVisible(true);
             }
         });
 
@@ -259,8 +170,7 @@ public class AlertPage extends JFrame {
         BackgroundLayout.setHorizontalGroup(
             BackgroundLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(BackgroundLayout.createSequentialGroup()
-                .addComponent(SideMenuPanel, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 30, Short.MAX_VALUE)
+                .addContainerGap(241, Short.MAX_VALUE)
                 .addGroup(BackgroundLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
                     .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, BackgroundLayout.createSequentialGroup()
                         .addGap(122, 122, 122)
@@ -280,7 +190,6 @@ public class AlertPage extends JFrame {
         );
         BackgroundLayout.setVerticalGroup(
             BackgroundLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addComponent(SideMenuPanel, javax.swing.GroupLayout.DEFAULT_SIZE, 570, Short.MAX_VALUE)
             .addGroup(BackgroundLayout.createSequentialGroup()
                 .addGap(49, 49, 49)
                 .addComponent(jLabel1, javax.swing.GroupLayout.PREFERRED_SIZE, 51, javax.swing.GroupLayout.PREFERRED_SIZE)
@@ -311,34 +220,6 @@ public class AlertPage extends JFrame {
         pack();
     }// </editor-fold>//GEN-END:initComponents
 
-    private void PerfilPanelMouseEntered(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_PerfilPanelMouseEntered
-        PerfilPanel.setBackground(SideMenuPanel.getBackground().darker());
-    }//GEN-LAST:event_PerfilPanelMouseEntered
-
-    private void PerfilPanelMouseExited(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_PerfilPanelMouseExited
-        PerfilPanel.setBackground(SideMenuPanel.getBackground().brighter());
-    }//GEN-LAST:event_PerfilPanelMouseExited
-
-    private void AlertasPanelMouseEntered(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_AlertasPanelMouseEntered
-        AlertasPanel.setBackground(SideMenuPanel.getBackground().darker());
-    }//GEN-LAST:event_AlertasPanelMouseEntered
-
-    private void AlertasPanelMouseExited(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_AlertasPanelMouseExited
-        AlertasPanel.setBackground(SideMenuPanel.getBackground().brighter());
-    }//GEN-LAST:event_AlertasPanelMouseExited
-
-    private void MapaPanelMouseEntered(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_MapaPanelMouseEntered
-        MapaPanel.setBackground(SideMenuPanel.getBackground().darker());
-    }//GEN-LAST:event_MapaPanelMouseEntered
-
-    private void MapaPanelMouseExited(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_MapaPanelMouseExited
-        MapaPanel.setBackground(SideMenuPanel.getBackground().brighter());
-    }//GEN-LAST:event_MapaPanelMouseExited
-
-    private void AddAlertButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_AddAlertButtonActionPerformed
-        // TODO add your handling code here:
-    }//GEN-LAST:event_AddAlertButtonActionPerformed
-
     private void jButton2ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton2ActionPerformed
 excluirAlertaSelecionado();    }//GEN-LAST:event_jButton2ActionPerformed
 
@@ -347,16 +228,10 @@ excluirAlertaSelecionado();    }//GEN-LAST:event_jButton2ActionPerformed
     }//GEN-LAST:event_jButton4ActionPerformed
 
     private void jButton3ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton3ActionPerformed
-        carregarAlertasDoBackend("7d");
+        carregarAlertasDoBackend("27d");
     }//GEN-LAST:event_jButton3ActionPerformed
 
-
-    /**
-     *
-     * @param args
-     */
-    
-private void carregarAlertasDoBackend(String filtro) {
+    private void carregarAlertasDoBackend(String filtro) {
     try {
         String endpoint = "alert";
         if (filtro != null && !filtro.isEmpty()) {
@@ -393,11 +268,9 @@ private void carregarAlertasDoBackend(String filtro) {
         JOptionPane.showMessageDialog(this, "Erro ao carregar alertas: " + e.getMessage(), "Erro", JOptionPane.ERROR_MESSAGE);
         e.printStackTrace();
     }
-    
-    
 }
 
-private void excluirAlertaSelecionado() {
+    private void excluirAlertaSelecionado() {
     int linhaSelecionada = AlertsTable.getSelectedRow();
 
     if (linhaSelecionada == -1) {
@@ -420,34 +293,26 @@ private void excluirAlertaSelecionado() {
         }
     }
 }
-
-
+    /**
+     *
+     * @param args
+     */
 
     public static void main(String[] args) {
     java.awt.EventQueue.invokeLater(() -> {
-        new AlertPage().setVisible(true);
+        new AlertPageView().setVisible(true);
     });
 }
 
     
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JButton AddAlertButton;
-    private javax.swing.JPanel AlertasPanel;
     private javax.swing.JTable AlertsTable;
     private javax.swing.JPanel Background;
-    private javax.swing.JPanel MapaPanel;
-    private javax.swing.JPanel PerfilPanel;
-    private javax.swing.JPanel SideMenuPanel;
     private javax.swing.JButton jButton2;
     private javax.swing.JButton jButton3;
     private javax.swing.JButton jButton4;
     private javax.swing.JLabel jLabel1;
-    private javax.swing.JLabel jLabel2;
-    private javax.swing.JLabel jLabel3;
-    private javax.swing.JLabel jLabel4;
-    private javax.swing.JLabel jLabel5;
-    private javax.swing.JLabel jLabel6;
-    private javax.swing.JLabel jLabel7;
     private javax.swing.JScrollPane jScrollPane1;
     // End of variables declaration//GEN-END:variables
 

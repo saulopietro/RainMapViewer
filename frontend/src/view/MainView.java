@@ -5,6 +5,7 @@
 package view;
 
 import java.awt.BorderLayout;
+import java.awt.Dimension;
 import org.jxmapviewer.JXMapViewer;
 import view.components.MapComponent;
 import view.components.SideMenuComponent;
@@ -24,8 +25,9 @@ public class MainView extends javax.swing.JFrame {
 
     // Cria o componente de mapa
     MapComponent mapComponent = new MapComponent();
+    mapComponent.centralizarNaLocalizacaoAtual();
     JXMapViewer map = mapComponent.getMap();
-    
+    map.setPreferredSize(new Dimension(800, 600));
     // Cria o componente do menu lateral
     SideMenuComponent sideMenu = new SideMenuComponent();
 

@@ -4,16 +4,22 @@
  */
 package view;
 
+import api.ApiClient;
+import java.awt.Window;
+import javax.swing.SwingUtilities;
+
 /**
  *
  * @author alway
  */
-public class AdicionarAlerta extends javax.swing.JDialog {
+public class AdicionarAlertaView extends javax.swing.JDialog {
 
     /**
      * Creates new form AdicionarAlerta
+     * @param parent
+     * @param modal
      */
-    public AdicionarAlerta(java.awt.Frame parent, boolean modal) {
+    public AdicionarAlertaView(java.awt.Frame parent, boolean modal) {
         super(parent, modal);
         initComponents();
     }
@@ -29,7 +35,7 @@ public class AdicionarAlerta extends javax.swing.JDialog {
 
         jPanel1 = new javax.swing.JPanel();
         jLabel4 = new javax.swing.JLabel();
-        jButton1 = new javax.swing.JButton();
+        DefinirMapButton = new javax.swing.JButton();
         jComboBox2 = new javax.swing.JComboBox<>();
         jLabel5 = new javax.swing.JLabel();
         jLabel6 = new javax.swing.JLabel();
@@ -44,13 +50,22 @@ public class AdicionarAlerta extends javax.swing.JDialog {
         jLabel4.setFont(new java.awt.Font("Segoe UI", 1, 18)); // NOI18N
         jLabel4.setText("Localização");
 
-        jButton1.setFont(new java.awt.Font("Segoe UI", 0, 14)); // NOI18N
-        jButton1.setIcon(new javax.swing.ImageIcon(getClass().getResource("/img/Map--Streamline-Feather.png"))); // NOI18N
-        jButton1.setText("Definir no Mapa");
-        jButton1.setIconTextGap(7);
-        jButton1.addActionListener(new java.awt.event.ActionListener() {
+        DefinirMapButton.setFont(new java.awt.Font("Segoe UI", 0, 14)); // NOI18N
+        DefinirMapButton.setIcon(new javax.swing.ImageIcon(getClass().getResource("/img/Map--Streamline-Feather.png"))); // NOI18N
+        DefinirMapButton.setText("Definir no Mapa");
+        DefinirMapButton.setIconTextGap(7);
+        // ------
+        DefinirMapButton.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
-                jButton1ActionPerformed(evt);
+                // === Ação para abrir a JDialog AddAlertMapView ===
+                AddAlertMapView dialog = new AddAlertMapView((java.awt.Dialog) javax.swing.SwingUtilities.getWindowAncestor(DefinirMapButton), true);
+                dialog.setLocationRelativeTo(DefinirMapButton); // Centraliza em relação ao botão
+                dialog.setVisible(true);
+            }
+        });
+        DefinirMapButton.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                DefinirMapButtonActionPerformed(evt);
             }
         });
 
@@ -70,7 +85,7 @@ public class AdicionarAlerta extends javax.swing.JDialog {
         jLabel7.setFont(new java.awt.Font("Segoe UI", 1, 18)); // NOI18N
         jLabel7.setText("Tipo de Ocorrência");
 
-        jSpinner1.setModel(new javax.swing.SpinnerDateModel());
+        jSpinner1.setModel(new javax.swing.SpinnerDateModel(new java.util.Date(), null, null, java.util.Calendar.DAY_OF_WEEK));
 
         jComboBox3.setModel(new javax.swing.DefaultComboBoxModel<>(new String[] { "Crítico - Interdição Total", "Alto - Tráfego Lento", "Médio - Possível Atraso", "Baixo - Tráfego Normal" }));
         jComboBox3.addActionListener(new java.awt.event.ActionListener() {
@@ -101,7 +116,7 @@ public class AdicionarAlerta extends javax.swing.JDialog {
                         .addGap(38, 38, 38)
                         .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                             .addComponent(jComboBox3, javax.swing.GroupLayout.PREFERRED_SIZE, 178, javax.swing.GroupLayout.PREFERRED_SIZE)
-                            .addComponent(jButton1, javax.swing.GroupLayout.Alignment.TRAILING, javax.swing.GroupLayout.PREFERRED_SIZE, 178, javax.swing.GroupLayout.PREFERRED_SIZE))))
+                            .addComponent(DefinirMapButton, javax.swing.GroupLayout.Alignment.TRAILING, javax.swing.GroupLayout.PREFERRED_SIZE, 178, javax.swing.GroupLayout.PREFERRED_SIZE))))
                 .addContainerGap(79, Short.MAX_VALUE))
         );
         jPanel1Layout.setVerticalGroup(
@@ -122,7 +137,7 @@ public class AdicionarAlerta extends javax.swing.JDialog {
                 .addGap(30, 30, 30)
                 .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                     .addComponent(jLabel4)
-                    .addComponent(jButton1))
+                    .addComponent(DefinirMapButton))
                 .addContainerGap(80, Short.MAX_VALUE))
         );
 
@@ -140,10 +155,6 @@ public class AdicionarAlerta extends javax.swing.JDialog {
         pack();
     }// </editor-fold>//GEN-END:initComponents
 
-    private void jButton1ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton1ActionPerformed
-        // TODO add your handling code here:
-    }//GEN-LAST:event_jButton1ActionPerformed
-
     private void jComboBox2ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jComboBox2ActionPerformed
         // TODO add your handling code here:
     }//GEN-LAST:event_jComboBox2ActionPerformed
@@ -152,6 +163,50 @@ public class AdicionarAlerta extends javax.swing.JDialog {
         // TODO add your handling code here:
     }//GEN-LAST:event_jComboBox3ActionPerformed
 
+    private void DefinirMapButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_DefinirMapButtonActionPerformed
+    Window parentWindow = SwingUtilities.getWindowAncestor(DefinirMapButton);
+    AddAlertMapView dialog = new AddAlertMapView(parentWindow, true);
+
+    // Passando os dados preenchidos no formulário
+    dialog.setTipoOcorrencia(getTipoOcorrencia());
+    dialog.setUrgencia(getUrgencia());
+    dialog.setDataISO(getDataISO());
+    dialog.setLocationRelativeTo(DefinirMapButton); // centraliza em relação ao botão
+    dialog.setVisible(true);
+
+    }//GEN-LAST:event_DefinirMapButtonActionPerformed
+
+    public String getTipoOcorrencia() {
+    return (String) jComboBox2.getSelectedItem();  // Exemplo: "Engarrafamento"
+}
+
+public String getUrgencia() {
+    // Se você quer pegar o valor da outra combo (jComboBox3), que tem os níveis de urgência:
+    String nivel = (String) jComboBox3.getSelectedItem();
+    // Você pode simplificar para "Critico", "Alto", etc. Ou usar exatamente o texto
+    // Vou simplificar retornando "Critico" se for o primeiro item, etc:
+    if (nivel.startsWith("Crítico")) {
+        return "Critico";
+    } else if (nivel.startsWith("Alto")) {
+        return "Alto";
+    } else if (nivel.startsWith("Médio")) {
+        return "Medio";
+    } else {
+        return "Baixo";
+    }
+}
+
+    public String getDataISO() {
+        java.util.Date date = (java.util.Date) jSpinner1.getValue();
+        java.time.Instant instant = date.toInstant();
+        java.time.ZonedDateTime zdt = instant.atZone(java.time.ZoneId.systemDefault());
+        return zdt.toString();  // Retorna data no formato ISO 8601
+    }
+    
+    
+
+
+    
     /**
      * @param args the command line arguments
      */
@@ -168,34 +223,29 @@ public class AdicionarAlerta extends javax.swing.JDialog {
                     break;
                 }
             }
-        } catch (ClassNotFoundException ex) {
-            java.util.logging.Logger.getLogger(AdicionarAlerta.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
-        } catch (InstantiationException ex) {
-            java.util.logging.Logger.getLogger(AdicionarAlerta.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
-        } catch (IllegalAccessException ex) {
-            java.util.logging.Logger.getLogger(AdicionarAlerta.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
-        } catch (javax.swing.UnsupportedLookAndFeelException ex) {
-            java.util.logging.Logger.getLogger(AdicionarAlerta.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
+        } catch (ClassNotFoundException | InstantiationException | IllegalAccessException | javax.swing.UnsupportedLookAndFeelException ex) {
+            java.util.logging.Logger.getLogger(AdicionarAlertaView.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
         }
+        //</editor-fold>
+        //</editor-fold>
+        
         //</editor-fold>
 
         /* Create and display the dialog */
-        java.awt.EventQueue.invokeLater(new Runnable() {
-            public void run() {
-                AdicionarAlerta dialog = new AdicionarAlerta(new javax.swing.JFrame(), true);
-                dialog.addWindowListener(new java.awt.event.WindowAdapter() {
-                    @Override
-                    public void windowClosing(java.awt.event.WindowEvent e) {
-                        System.exit(0);
-                    }
-                });
-                dialog.setVisible(true);
-            }
+        java.awt.EventQueue.invokeLater(() -> {
+            AdicionarAlertaView dialog = new AdicionarAlertaView(new javax.swing.JFrame(), true);
+            dialog.addWindowListener(new java.awt.event.WindowAdapter() {
+                @Override
+                public void windowClosing(java.awt.event.WindowEvent e) {
+                    System.exit(0);
+                }
+            });
+            dialog.setVisible(true);
         });
     }
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
-    private javax.swing.JButton jButton1;
+    private javax.swing.JButton DefinirMapButton;
     private javax.swing.JComboBox<String> jComboBox2;
     private javax.swing.JComboBox<String> jComboBox3;
     private javax.swing.JLabel jLabel4;

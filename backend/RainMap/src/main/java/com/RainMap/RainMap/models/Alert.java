@@ -16,7 +16,7 @@ public class Alert {
     private String tipoOcorrencia;
     private String urgencia;
 
-    @OneToOne
+    @OneToOne(cascade = CascadeType.ALL)
     private Address address;
 
     public Alert(Long id, String tipoOcorrencia, String urgencia, Address address, Timestamp data) {

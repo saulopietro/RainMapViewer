@@ -75,6 +75,36 @@ public class ApiClient {
 
     conn.disconnect();
 }
+    
+    public static String post(String endpoint, String jsonInput) throws IOException {
+    URL url = new URL("http://localhost:8080/" + endpoint);
+    HttpURLConnection conn = (HttpURLConnection) url.openConnection();
+
+    conn.setRequestMethod("POST");
+    conn.setRequestProperty("Content-Type", "application/json; utf-8");
+    conn.setRequestProperty("Accept", "application/json");
+    conn.setDoOutput(true);
+
+    try (java.io.OutputStream os = conn.getOutputStream()) {
+        byte[] input = jsonInput.getBytes("utf-8");
+        os.write(input, 0, input.length);
+    }
+
+    int responseCode = conn.getResponseCode();
+    if (responseCode >= 200 && responseCode < 300) {
+        try (BufferedReader br = new BufferedReader(new InputStreamReader(conn.getInputStream(), "utf-8"))) {
+            StringBuilder response = new StringBuilder();
+            String responseLine;
+            while ((responseLine = br.readLine()) != null) {
+                response.append(responseLine.trim());
+            }
+            return response.toString();
+        }
+    } else {
+        throw new IOException("Erro ao enviar POST. Código HTTP: " + responseCode);
+    }
+}
+
 
 }
 
