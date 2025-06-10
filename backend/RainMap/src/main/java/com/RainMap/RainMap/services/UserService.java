@@ -8,7 +8,6 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
-import java.util.Optional;
 
 @Service
 public class UserService {
@@ -18,7 +17,7 @@ public class UserService {
 
     public UserDTO insert(UserDTO dto) {
 
-        User user = new User(dto.getName(), dto.getLastname(), dto.getEmail(), dto.getPassword());
+        User user = new User(dto.getName(), dto.getEmail(), dto.getPassword());
 
         repository.save(user);
 

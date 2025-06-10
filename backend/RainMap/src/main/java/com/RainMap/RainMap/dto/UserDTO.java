@@ -1,8 +1,6 @@
 package com.RainMap.RainMap.dto;
 
-import com.RainMap.RainMap.models.Address;
 import com.RainMap.RainMap.models.User;
-import jakarta.persistence.OneToOne;
 
 import java.util.Optional;
 
@@ -10,14 +8,12 @@ public class UserDTO {
 
     private Long id;
     private String name;
-    private String lastname;
     private String email;
     private String password;
 
-    public UserDTO(Long id, String name, String lastname, String email, String password) {
+    public UserDTO(Long id, String name, String email, String password) {
         this.id = id;
         this.name = name;
-        this.lastname = lastname;
         this.email = email;
         this.password = password;
     }
@@ -28,7 +24,6 @@ public class UserDTO {
     public UserDTO(User user) {
         id = user.getId();
         name = user.getName();
-        lastname = user.getLastname();
         email = user.getEmail();
         password = user.getPassword();
     }
@@ -37,7 +32,6 @@ public class UserDTO {
 
         id = user.get().getId();
         name = user.get().getName();
-        lastname = user.get().getLastname();
         email = user.get().getEmail();
         password = user.get().getPassword();
     }
@@ -56,14 +50,6 @@ public class UserDTO {
 
     public void setName(String name) {
         this.name = name;
-    }
-
-    public String getLastname() {
-        return lastname;
-    }
-
-    public void setLastname(String lastname) {
-        this.lastname = lastname;
     }
 
     public String getEmail() {

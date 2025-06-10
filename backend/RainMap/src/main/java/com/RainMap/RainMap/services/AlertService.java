@@ -6,6 +6,8 @@ import com.RainMap.RainMap.repositories.AlertRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import java.util.List;
+
 @Service
 public class AlertService {
 
@@ -19,6 +21,12 @@ public class AlertService {
         repository.save(alert);
 
         return new AlertDTO(alert);
+    }
+
+    public List<AlertDTO> findAll() {
+        List<Alert> alerts = repository.findAll();
+
+        return alerts.stream().map(x -> new AlertDTO(x.getId(), x.getTipoOcorrencia(), x.getUrgencia(), x.getAddress(), x.getData())).toList();
     }
 
 }

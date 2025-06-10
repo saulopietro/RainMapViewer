@@ -4,6 +4,7 @@
  */
 package view;
 
+import api.ApiClient;
 import java.awt.BasicStroke;
 import java.awt.BorderLayout;
 import java.awt.CardLayout;
@@ -17,9 +18,13 @@ import javax.swing.*;
 import java.awt.event.*;
 import java.awt.geom.Point2D;
 import java.awt.geom.Rectangle2D;
+import java.io.BufferedReader;
 import java.io.IOException;
+import java.io.InputStreamReader;
 import java.net.HttpURLConnection;
 import java.net.URL;
+import java.net.URLEncoder;
+import java.nio.charset.StandardCharsets;
 import java.util.Date;
 import java.util.Scanner;
 import java.util.Set;
@@ -30,10 +35,13 @@ import org.jxmapviewer.viewer.Waypoint;
 import org.jxmapviewer.viewer.WaypointPainter;
 import javax.swing.table.DefaultTableModel;
 import java.text.SimpleDateFormat;
+import java.time.OffsetDateTime;
+import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Locale;
+import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 import view.components.MapComponent;
@@ -49,6 +57,8 @@ public class AlertPage extends JFrame {
      */
     public AlertPage() {
         initComponents();
+        carregarAlertasDoBackend(null); // Carrega todos os alertas ao abrir
+
     }
 
     /**
@@ -110,7 +120,7 @@ public class AlertPage extends JFrame {
         SideMenuPanel.setRequestFocusEnabled(false);
 
         PerfilPanel.setBackground(new java.awt.Color(255, 255, 255));
-        PerfilPanel.setCursor(new java.awt.Cursor(java.awt.Cursor.HAND_CURSOR));
+        PerfilPanel.setCursor(new java.awt.Cursor(java.awt.Cursor.DEFAULT_CURSOR));
         PerfilPanel.setPreferredSize(new java.awt.Dimension(143, 90));
         PerfilPanel.addMouseListener(new java.awt.event.MouseAdapter() {
             public void mouseEntered(java.awt.event.MouseEvent evt) {
@@ -130,7 +140,7 @@ public class AlertPage extends JFrame {
         PerfilPanel.add(jLabel7, new org.netbeans.lib.awtextra.AbsoluteConstraints(30, 20, -1, -1));
 
         AlertasPanel.setBackground(new java.awt.Color(255, 255, 255));
-        AlertasPanel.setCursor(new java.awt.Cursor(java.awt.Cursor.HAND_CURSOR));
+        AlertasPanel.setCursor(new java.awt.Cursor(java.awt.Cursor.DEFAULT_CURSOR));
         AlertasPanel.setPreferredSize(new java.awt.Dimension(143, 90));
         AlertasPanel.addMouseListener(new java.awt.event.MouseAdapter() {
             public void mouseEntered(java.awt.event.MouseEvent evt) {
@@ -150,7 +160,7 @@ public class AlertPage extends JFrame {
         AlertasPanel.add(jLabel5, new org.netbeans.lib.awtextra.AbsoluteConstraints(90, 20, -1, 30));
 
         MapaPanel.setBackground(new java.awt.Color(255, 255, 255));
-        MapaPanel.setCursor(new java.awt.Cursor(java.awt.Cursor.HAND_CURSOR));
+        MapaPanel.setCursor(new java.awt.Cursor(java.awt.Cursor.DEFAULT_CURSOR));
         MapaPanel.setRequestFocusEnabled(false);
         MapaPanel.addMouseListener(new java.awt.event.MouseAdapter() {
             public void mouseEntered(java.awt.event.MouseEvent evt) {
@@ -163,12 +173,12 @@ public class AlertPage extends JFrame {
         MapaPanel.setLayout(new org.netbeans.lib.awtextra.AbsoluteLayout());
 
         jLabel4.setIcon(new javax.swing.ImageIcon(getClass().getResource("/img/CfCqj5bgJAGChpNqi7Ii4AYBEmPXtUjQ6JqQHfRQgKDRQ2wOhQACCCCAgNcECBpW1DhPbFaosk8EEEAAAQcKWBM0EPrwKZAkRFwlwC3IXfVJ2fjXAFrgoZzPSg5AggggAACCJgo8FyYtMDl4b6IQAAAABJRU5ErkJggg.png"))); // NOI18N
-        jLabel4.setCursor(new java.awt.Cursor(java.awt.Cursor.HAND_CURSOR));
+        jLabel4.setCursor(new java.awt.Cursor(java.awt.Cursor.DEFAULT_CURSOR));
         MapaPanel.add(jLabel4, new org.netbeans.lib.awtextra.AbsoluteConstraints(30, 20, -1, -1));
 
         jLabel3.setFont(new java.awt.Font("Segoe UI", 0, 24)); // NOI18N
         jLabel3.setText("Mapa");
-        jLabel3.setCursor(new java.awt.Cursor(java.awt.Cursor.HAND_CURSOR));
+        jLabel3.setCursor(new java.awt.Cursor(java.awt.Cursor.DEFAULT_CURSOR));
         MapaPanel.add(jLabel3, new org.netbeans.lib.awtextra.AbsoluteConstraints(90, 20, 61, 30));
 
         javax.swing.GroupLayout SideMenuPanelLayout = new javax.swing.GroupLayout(SideMenuPanel);
@@ -199,7 +209,7 @@ public class AlertPage extends JFrame {
         jButton2.setFont(new java.awt.Font("Segoe UI", 1, 12)); // NOI18N
         jButton2.setIcon(new javax.swing.ImageIcon(getClass().getResource("/img/X--Streamline-Feather.png"))); // NOI18N
         jButton2.setText("Excluir Alerta");
-        jButton2.setCursor(new java.awt.Cursor(java.awt.Cursor.HAND_CURSOR));
+        jButton2.setCursor(new java.awt.Cursor(java.awt.Cursor.DEFAULT_CURSOR));
         jButton2.setDisabledIcon(null);
         jButton2.setHorizontalTextPosition(javax.swing.SwingConstants.LEFT);
         jButton2.setIconTextGap(0);
@@ -213,7 +223,7 @@ public class AlertPage extends JFrame {
         AddAlertButton.setFont(new java.awt.Font("Segoe UI", 1, 12)); // NOI18N
         AddAlertButton.setIcon(new javax.swing.ImageIcon(getClass().getResource("/img/Plus--Streamline-Feather.png"))); // NOI18N
         AddAlertButton.setText("Adicionar Alerta");
-        AddAlertButton.setCursor(new java.awt.Cursor(java.awt.Cursor.HAND_CURSOR));
+        AddAlertButton.setCursor(new java.awt.Cursor(java.awt.Cursor.DEFAULT_CURSOR));
         AddAlertButton.setHorizontalTextPosition(javax.swing.SwingConstants.LEFT);
         AddAlertButton.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
@@ -224,7 +234,7 @@ public class AlertPage extends JFrame {
         jButton3.setFont(new java.awt.Font("Segoe UI", 1, 12)); // NOI18N
         jButton3.setIcon(new javax.swing.ImageIcon(getClass().getResource("/img/Calendar--Streamline-Feather.png"))); // NOI18N
         jButton3.setText("Última semana");
-        jButton3.setCursor(new java.awt.Cursor(java.awt.Cursor.HAND_CURSOR));
+        jButton3.setCursor(new java.awt.Cursor(java.awt.Cursor.DEFAULT_CURSOR));
         jButton3.setIconTextGap(7);
         jButton3.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
@@ -235,7 +245,7 @@ public class AlertPage extends JFrame {
         jButton4.setFont(new java.awt.Font("Segoe UI", 1, 12)); // NOI18N
         jButton4.setIcon(new javax.swing.ImageIcon(getClass().getResource("/img/Clock--Streamline-Feather.png"))); // NOI18N
         jButton4.setText("Últimas 24h");
-        jButton4.setCursor(new java.awt.Cursor(java.awt.Cursor.HAND_CURSOR));
+        jButton4.setCursor(new java.awt.Cursor(java.awt.Cursor.DEFAULT_CURSOR));
         jButton4.setHorizontalAlignment(javax.swing.SwingConstants.LEFT);
         jButton4.setIconTextGap(7);
         jButton4.addActionListener(new java.awt.event.ActionListener() {
@@ -277,10 +287,11 @@ public class AlertPage extends JFrame {
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addComponent(jButton2)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addGroup(BackgroundLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                    .addComponent(AddAlertButton)
-                    .addComponent(jButton3, javax.swing.GroupLayout.PREFERRED_SIZE, 32, javax.swing.GroupLayout.PREFERRED_SIZE)
-                    .addComponent(jButton4, javax.swing.GroupLayout.PREFERRED_SIZE, 32, javax.swing.GroupLayout.PREFERRED_SIZE))
+                .addGroup(BackgroundLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                    .addComponent(jButton3, javax.swing.GroupLayout.Alignment.TRAILING, javax.swing.GroupLayout.PREFERRED_SIZE, 32, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addGroup(BackgroundLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                        .addComponent(AddAlertButton)
+                        .addComponent(jButton4, javax.swing.GroupLayout.PREFERRED_SIZE, 32, javax.swing.GroupLayout.PREFERRED_SIZE)))
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
                 .addComponent(jScrollPane1, javax.swing.GroupLayout.PREFERRED_SIZE, 328, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addContainerGap(54, Short.MAX_VALUE))
@@ -329,15 +340,14 @@ public class AlertPage extends JFrame {
     }//GEN-LAST:event_AddAlertButtonActionPerformed
 
     private void jButton2ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton2ActionPerformed
-        // TODO add your handling code here:
     }//GEN-LAST:event_jButton2ActionPerformed
 
     private void jButton4ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton4ActionPerformed
-        // TODO add your handling code here:
+        carregarAlertasDoBackend("24h");
     }//GEN-LAST:event_jButton4ActionPerformed
 
     private void jButton3ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton3ActionPerformed
-        // TODO add your handling code here:
+        carregarAlertasDoBackend("7d");
     }//GEN-LAST:event_jButton3ActionPerformed
 
 
@@ -345,6 +355,42 @@ public class AlertPage extends JFrame {
      *
      * @param args
      */
+    
+private void carregarAlertasDoBackend(String filtro) {
+    try {
+        String endpoint = "alert";
+        if (filtro != null && !filtro.isEmpty()) {
+            endpoint += "?filtro=" + URLEncoder.encode(filtro, StandardCharsets.UTF_8);
+        }
+
+        String response = ApiClient.getAll(endpoint);
+        JSONArray alertas = new JSONArray(response.trim());
+
+        DefaultTableModel model = (DefaultTableModel) AlertsTable.getModel();
+        model.setRowCount(0);
+
+        for (int i = 0; i < alertas.length(); i++) {
+            JSONObject alerta = alertas.getJSONObject(i);
+
+            String tipo = alerta.getString("tipoOcorrencia");
+            String urgencia = alerta.getString("urgencia");
+
+            String dataRaw = alerta.getString("data");
+            OffsetDateTime data = OffsetDateTime.parse(dataRaw);
+            String dataFormatada = data.format(DateTimeFormatter.ofPattern("dd/MM/yyyy HH:mm"));
+
+            JSONObject endereco = alerta.getJSONObject("address");
+            String local = endereco.getString("endereco");
+            double latitude = endereco.getDouble("latitude");
+            double longitude = endereco.getDouble("longitude");
+
+            model.addRow(new Object[]{tipo, dataFormatada, urgencia, local, latitude, longitude});
+        }
+    } catch (Exception e) {
+        JOptionPane.showMessageDialog(this, "Erro ao carregar alertas: " + e.getMessage(), "Erro", JOptionPane.ERROR_MESSAGE);
+        e.printStackTrace();
+    }
+}
 
     public static void main(String[] args) {
     java.awt.EventQueue.invokeLater(() -> {

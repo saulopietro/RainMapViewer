@@ -3,6 +3,7 @@ package com.RainMap.RainMap.controllers;
 import com.RainMap.RainMap.controllers.exceptions.PasswordIncorrectException;
 import com.RainMap.RainMap.dto.AlertDTO;
 import com.RainMap.RainMap.dto.UserDTO;
+import com.RainMap.RainMap.models.Alert;
 import com.RainMap.RainMap.services.AlertService;
 import com.RainMap.RainMap.services.UserService;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -12,6 +13,7 @@ import org.springframework.web.bind.annotation.*;
 import org.springframework.web.servlet.support.ServletUriComponentsBuilder;
 
 import java.net.URI;
+import java.util.List;
 
 @RestController
 @RequestMapping(value = "/alert")
@@ -30,6 +32,13 @@ public class AlertController {
                                         .toUri();
 
         return ResponseEntity.created(location).body(body);
+    }
+
+    @GetMapping
+    public ResponseEntity<List<AlertDTO>> findAll() {
+        List<AlertDTO> alerts = service.findAll();
+
+        return ResponseEntity.ok().body(alerts);
     }
 
 }

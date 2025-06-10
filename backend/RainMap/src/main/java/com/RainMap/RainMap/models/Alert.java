@@ -1,5 +1,6 @@
 package com.RainMap.RainMap.models;
 
+import com.fasterxml.jackson.annotation.JsonManagedReference;
 import jakarta.persistence.*;
 
 import java.sql.Timestamp;
@@ -11,7 +12,6 @@ public class Alert {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
-
     private Timestamp data;
     private String tipoOcorrencia;
     private String urgencia;

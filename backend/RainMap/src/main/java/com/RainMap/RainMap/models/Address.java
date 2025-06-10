@@ -1,5 +1,6 @@
 package com.RainMap.RainMap.models;
 
+import com.fasterxml.jackson.annotation.JsonBackReference;
 import jakarta.persistence.*;
 
 @Entity
@@ -14,22 +15,19 @@ public class Address {
     private Double latitude;
     private Double longitude;
 
-    @OneToOne
-    private Alert alert;
 
-    public Address(Long id, String endereco, Double latitude, Double longitude, Alert alert) {
+    public Address(Long id, String endereco, Double latitude, Double longitude) {
         this.id = id;
         this.endereco = endereco;
         this.latitude = latitude;
         this.longitude = longitude;
-        this.alert = alert;
+
     }
 
-    public Address(String endereco ,Double latitude, Double longitude, Alert alert) {
+    public Address(String endereco ,Double latitude, Double longitude) {
         this.endereco = endereco;
         this.latitude = latitude;
         this.longitude = longitude;
-        this.alert = alert;
     }
 
     public Address() {
@@ -67,11 +65,4 @@ public class Address {
         this.endereco = endereco;
     }
 
-    public Alert getAlert() {
-        return alert;
-    }
-
-    public void setAlert(Alert alert) {
-        this.alert = alert;
-    }
 }
