@@ -4,9 +4,19 @@
  */
 package view;
 
+import api.ApiClient;
 import java.awt.BorderLayout;
 import java.awt.Dimension;
+import java.util.HashSet;
+import java.util.Set;
+import javax.swing.JOptionPane;
+import org.json.JSONArray;
+import org.json.JSONObject;
 import org.jxmapviewer.JXMapViewer;
+import org.jxmapviewer.viewer.DefaultWaypoint;
+import org.jxmapviewer.viewer.GeoPosition;
+import org.jxmapviewer.viewer.Waypoint;
+import org.jxmapviewer.viewer.WaypointPainter;
 import view.components.MapComponent;
 import view.components.SideMenuComponent;
 
@@ -27,7 +37,12 @@ public class MainView extends javax.swing.JFrame {
     MapComponent mapComponent = new MapComponent();
     mapComponent.centralizarNaLocalizacaoAtual();
     JXMapViewer map = mapComponent.getMap();
+        
+    carregarPinsNoMapa(map);
+
+    
     map.setPreferredSize(new Dimension(800, 600));
+    
     // Cria o componente do menu lateral
     SideMenuComponent sideMenu = new SideMenuComponent();
 
@@ -83,6 +98,36 @@ public class MainView extends javax.swing.JFrame {
         pack();
     }// </editor-fold>//GEN-END:initComponents
 
+    private void carregarPinsNoMapa(JXMapViewer map) {
+    try {
+        String response = ApiClient.getAll("alert");
+        JSONArray alertas = new JSONArray(response.trim());
+
+        Set<Waypoint> waypoints = new HashSet<>();
+
+        for (int i = 0; i < alertas.length(); i++) {
+            JSONObject alerta = alertas.getJSONObject(i);
+            JSONObject endereco = alerta.getJSONObject("address");
+
+            double latitude = endereco.getDouble("latitude");
+            double longitude = endereco.getDouble("longitude");
+
+            GeoPosition pos = new GeoPosition(latitude, longitude);
+            waypoints.add(new DefaultWaypoint(pos));
+        }
+
+        WaypointPainter<Waypoint> painter = new WaypointPainter<>();
+        painter.setWaypoints(waypoints);
+
+        map.setOverlayPainter(painter);
+
+    } catch (Exception e) {
+        JOptionPane.showMessageDialog(this, "Erro ao carregar pins: " + e.getMessage(), "Erro", JOptionPane.ERROR_MESSAGE);
+        e.printStackTrace();
+    }
+}
+
+    
     /**
      * @param args the command line arguments
      */
