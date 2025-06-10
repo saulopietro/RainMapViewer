@@ -41,7 +41,7 @@
   <SubComponents>
     <Container class="javax.swing.JPanel" name="PanelMapViewer">
       <AuxValues>
-        <AuxValue name="JavaCodeGenerator_AddingCodePost" type="java.lang.String" value="// Code adding the component to the parent container - not shown here&#xa;// === Configura&#xe7;&#xe3;o do painel principal ===&#xa;PanelMapViewer.setMinimumSize(new java.awt.Dimension(800, 600));&#xa;PanelMapViewer.setLayout(new java.awt.BorderLayout()); // garante layout adequado&#xa;&#xa;// === Adiciona o componente de mapa personalizado ===&#xa;view.components.MapComponent mapComponent = new view.components.MapComponent();&#xa;PanelMapViewer.add(mapComponent, java.awt.BorderLayout.CENTER);&#xa;&#xa;// === Configura a janela principal ===&#xa;setSize(800, 600);&#xa;setResizable(false);&#xa;setLocationRelativeTo(null);&#xa;&#xa;// === Zoom inicial e localiza&#xe7;&#xe3;o autom&#xe1;tica (opcional) ===&#xa;mapComponent.getMap().setZoom(7); // voc&#xea; pode ajustar para 7 ou 12&#xa;mapComponent.centralizarNaLocalizacaoAtual(); // se voc&#xea; implementou esse m&#xe9;todo&#xa;&#xa;// === L&#xf3;gica de clique para adicionar m&#xfa;ltiplos pinos ===&#xa;org.jxmapviewer.JXMapViewer mapViewer = mapComponent.getMap();&#xa;mapViewer.addMouseListener(new java.awt.event.MouseAdapter() {&#xa;    @Override&#xa;    public void mouseClicked(java.awt.event.MouseEvent e) {&#xa;        java.awt.Point pt = e.getPoint();&#xa;        org.jxmapviewer.viewer.GeoPosition geo = mapViewer.convertPointToGeoPosition(pt);&#xa;&#xa;        // Adiciona novo pino no MapComponent (sem remover anteriores)&#xa;        mapComponent.adicionarWaypoint(geo);&#xa;&#xa;        System.out.println(&quot;Pino adicionado: &quot; + geo.getLatitude() + &quot;, &quot; + geo.getLongitude());&#xa;    }&#xa;});"/>
+        <AuxValue name="JavaCodeGenerator_AddingCodePost" type="java.lang.String" value="// === Configura&#xe7;&#xe3;o do painel principal ===&#xa;PanelMapViewer.setMinimumSize(new java.awt.Dimension(800, 600));&#xa;PanelMapViewer.setLayout(new java.awt.BorderLayout()); // garante layout adequado&#xa;&#xa;// === Adiciona o componente de mapa personalizado ===&#xa;view.components.MapComponent mapComponent = new view.components.MapComponent();&#xa;PanelMapViewer.add(mapComponent, java.awt.BorderLayout.CENTER);&#xa;&#xa;// === Configura a janela principal ===&#xa;setSize(800, 600);&#xa;setResizable(false);&#xa;setLocationRelativeTo(null);&#xa;&#xa;// === Zoom inicial e localiza&#xe7;&#xe3;o autom&#xe1;tica (opcional) ===&#xa;mapComponent.getMap().setZoom(7); // voc&#xea; pode ajustar para 7 ou 12&#xa;mapComponent.centralizarNaLocalizacaoAtual(); // se voc&#xea; implementou esse m&#xe9;todo&#xa;&#xa;// === L&#xf3;gica de clique no mapa ===&#xa;org.jxmapviewer.JXMapViewer mapViewer = mapComponent.getMap();&#xa;&#xa;mapViewer.addMouseListener(new java.awt.event.MouseAdapter() {&#xa;    @Override&#xa;    public void mouseClicked(java.awt.event.MouseEvent e) {&#xa;        java.awt.Point pt = e.getPoint();&#xa;        org.jxmapviewer.viewer.GeoPosition geo = mapViewer.convertPointToGeoPosition(pt);&#xa;&#xa;        // Adiciona pino no mapa (sem remover os anteriores)&#xa;        mapComponent.adicionarWaypoint(geo);&#xa;&#xa;        // Atualiza campo de coordenadas&#xa;        String coordText = String.format(&quot;%.6f, %.6f&quot;, geo.getLatitude(), geo.getLongitude());&#xa;        CoordTextField.setText(coordText);&#xa;&#xa;        // Faz reverse geocoding (lat/lon &#x2192; endere&#xe7;o)&#xa;        try {&#xa;            String urlStr = String.format(&#xa;    &quot;https://nominatim.openstreetmap.org/reverse?format=json&amp;lat=%s&amp;lon=%s&quot;,&#xa;    String.valueOf(geo.getLatitude()).replace(&quot;,&quot;, &quot;.&quot;),&#xa;    String.valueOf(geo.getLongitude()).replace(&quot;,&quot;, &quot;.&quot;)&#xa;);&#xa;&#xa;            java.net.URL url = new java.net.URL(urlStr);&#xa;            java.net.HttpURLConnection conn = (java.net.HttpURLConnection) url.openConnection();&#xa;            conn.setRequestProperty(&quot;User-Agent&quot;, &quot;JavaApp&quot;);&#xa;            conn.connect();&#xa;&#xa;            String response = new java.util.Scanner(conn.getInputStream()).useDelimiter(&quot;\\A&quot;).next();&#xa;            org.json.JSONObject json = new org.json.JSONObject(response);&#xa;&#xa;            String endereco = json.getString(&quot;display_name&quot;);&#xa;            TextAreaAddress.setText(endereco);&#xa;&#xa;        } catch (Exception ex) {&#xa;            TextAreaAddress.setText(&quot;Erro ao buscar endere&#xe7;o: &quot; + ex.getMessage());&#xa;            ex.printStackTrace();&#xa;        }&#xa;&#xa;        System.out.println(&quot;Pino adicionado: &quot; + geo.getLatitude() + &quot;, &quot; + geo.getLongitude());&#xa;    }&#xa;});"/>
       </AuxValues>
 
       <Layout>
@@ -118,6 +118,10 @@
           </Properties>
         </Component>
         <Container class="javax.swing.JScrollPane" name="jScrollPane1">
+          <Properties>
+            <Property name="horizontalScrollBarPolicy" type="int" value="31"/>
+            <Property name="verticalScrollBarPolicy" type="int" value="21"/>
+          </Properties>
           <AuxValues>
             <AuxValue name="autoScrollPane" type="java.lang.Boolean" value="true"/>
           </AuxValues>
@@ -129,6 +133,9 @@
                 <Property name="columns" type="int" value="5"/>
                 <Property name="rows" type="int" value="5"/>
               </Properties>
+              <AuxValues>
+                <AuxValue name="JavaCodeGenerator_AddingCodePost" type="java.lang.String" value="TextAreaAddress.setLineWrap(true);               // Ativa quebra de linha autom&#xe1;tica&#xa;TextAreaAddress.setWrapStyleWord(true);          // Quebra apenas em palavras (evita cortar no meio)"/>
+              </AuxValues>
             </Component>
           </SubComponents>
         </Container>

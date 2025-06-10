@@ -3,6 +3,14 @@
  * Click nbfs://nbhost/SystemFileSystem/Templates/GUIForms/JDialog.java to edit this template
  */
 package view;
+import org.jxmapviewer.viewer.GeoPosition;
+import org.jxmapviewer.JXMapViewer;
+
+import java.awt.Point;
+import java.net.URL;
+import java.net.HttpURLConnection;
+import java.util.Scanner;
+import org.json.JSONObject;
 
 /**
  *
@@ -55,9 +63,14 @@ public class AddAlertMap extends javax.swing.JDialog {
         TextLocal.setFont(new java.awt.Font("Segoe UI", 1, 22)); // NOI18N
         TextLocal.setText("Local");
 
+        jScrollPane1.setHorizontalScrollBarPolicy(javax.swing.ScrollPaneConstants.HORIZONTAL_SCROLLBAR_NEVER);
+        jScrollPane1.setVerticalScrollBarPolicy(javax.swing.ScrollPaneConstants.VERTICAL_SCROLLBAR_NEVER);
+
         TextAreaAddress.setColumns(5);
         TextAreaAddress.setRows(5);
         jScrollPane1.setViewportView(TextAreaAddress);
+        TextAreaAddress.setLineWrap(true);               // Ativa quebra de linha automática
+        TextAreaAddress.setWrapStyleWord(true);          // Quebra apenas em palavras (evita cortar no meio)
 
         CoordTextField.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
@@ -134,7 +147,6 @@ public class AddAlertMap extends javax.swing.JDialog {
             .addComponent(InfosPanel, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
         );
 
-        // Code adding the component to the parent container - not shown here
         // === Configuração do painel principal ===
         PanelMapViewer.setMinimumSize(new java.awt.Dimension(800, 600));
         PanelMapViewer.setLayout(new java.awt.BorderLayout()); // garante layout adequado
@@ -152,16 +164,45 @@ public class AddAlertMap extends javax.swing.JDialog {
         mapComponent.getMap().setZoom(7); // você pode ajustar para 7 ou 12
         mapComponent.centralizarNaLocalizacaoAtual(); // se você implementou esse método
 
-        // === Lógica de clique para adicionar múltiplos pinos ===
+        // === Lógica de clique no mapa ===
         org.jxmapviewer.JXMapViewer mapViewer = mapComponent.getMap();
+
         mapViewer.addMouseListener(new java.awt.event.MouseAdapter() {
             @Override
             public void mouseClicked(java.awt.event.MouseEvent e) {
                 java.awt.Point pt = e.getPoint();
                 org.jxmapviewer.viewer.GeoPosition geo = mapViewer.convertPointToGeoPosition(pt);
 
-                // Adiciona novo pino no MapComponent (sem remover anteriores)
+                // Adiciona pino no mapa (sem remover os anteriores)
                 mapComponent.adicionarWaypoint(geo);
+
+                // Atualiza campo de coordenadas
+                String coordText = String.format("%.6f, %.6f", geo.getLatitude(), geo.getLongitude());
+                CoordTextField.setText(coordText);
+
+                // Faz reverse geocoding (lat/lon → endereço)
+                try {
+                    String urlStr = String.format(
+                        "https://nominatim.openstreetmap.org/reverse?format=json&lat=%s&lon=%s",
+                        String.valueOf(geo.getLatitude()).replace(",", "."),
+                        String.valueOf(geo.getLongitude()).replace(",", ".")
+                    );
+
+                    java.net.URL url = new java.net.URL(urlStr);
+                    java.net.HttpURLConnection conn = (java.net.HttpURLConnection) url.openConnection();
+                    conn.setRequestProperty("User-Agent", "JavaApp");
+                    conn.connect();
+
+                    String response = new java.util.Scanner(conn.getInputStream()).useDelimiter("\\A").next();
+                    org.json.JSONObject json = new org.json.JSONObject(response);
+
+                    String endereco = json.getString("display_name");
+                    TextAreaAddress.setText(endereco);
+
+                } catch (Exception ex) {
+                    TextAreaAddress.setText("Erro ao buscar endereço: " + ex.getMessage());
+                    ex.printStackTrace();
+                }
 
                 System.out.println("Pino adicionado: " + geo.getLatitude() + ", " + geo.getLongitude());
             }
