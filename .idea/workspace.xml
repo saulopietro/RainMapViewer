@@ -1,0 +1,125 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project version="4">
+  <component name="AutoImportSettings">
+    <option name="autoReloadType" value="SELECTIVE" />
+  </component>
+  <component name="ChangeListManager">
+    <list default="true" id="99d586f9-2d68-486e-9e53-118be754441d" name="Changes" comment="">
+      <change beforePath="$PROJECT_DIR$/backend/RainMap/pom.xml" beforeDir="false" afterPath="$PROJECT_DIR$/backend/RainMap/pom.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/backend/RainMap/src/main/java/com/RainMap/RainMap/controllers/AlertController.java" beforeDir="false" afterPath="$PROJECT_DIR$/backend/RainMap/src/main/java/com/RainMap/RainMap/controllers/AlertController.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/backend/RainMap/src/main/java/com/RainMap/RainMap/models/Alert.java" beforeDir="false" afterPath="$PROJECT_DIR$/backend/RainMap/src/main/java/com/RainMap/RainMap/models/Alert.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/backend/RainMap/src/main/java/com/RainMap/RainMap/services/AlertService.java" beforeDir="false" afterPath="$PROJECT_DIR$/backend/RainMap/src/main/java/com/RainMap/RainMap/services/AlertService.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/backend/RainMap/src/main/resources/application.properties" beforeDir="false" afterPath="$PROJECT_DIR$/backend/RainMap/src/main/resources/application.properties" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/backend/RainMap/src/main/resources/import.sql" beforeDir="false" afterPath="$PROJECT_DIR$/backend/RainMap/src/main/resources/import.sql" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/backend/RainMap/target/classes/application.properties" beforeDir="false" afterPath="$PROJECT_DIR$/backend/RainMap/target/classes/application.properties" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/backend/RainMap/target/classes/com/RainMap/RainMap/models/Alert.class" beforeDir="false" afterPath="$PROJECT_DIR$/backend/RainMap/target/classes/com/RainMap/RainMap/models/Alert.class" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/backend/RainMap/target/classes/com/RainMap/RainMap/services/AlertService.class" beforeDir="false" afterPath="$PROJECT_DIR$/backend/RainMap/target/classes/com/RainMap/RainMap/services/AlertService.class" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/frontend/build/classes/view/MainView$1.class" beforeDir="false" afterPath="$PROJECT_DIR$/frontend/build/classes/view/MainView$1.class" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/frontend/build/classes/view/MainView.class" beforeDir="false" afterPath="$PROJECT_DIR$/frontend/build/classes/view/MainView.class" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/frontend/build/classes/view/MainView.form" beforeDir="false" afterPath="$PROJECT_DIR$/frontend/build/classes/view/MainView.form" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/frontend/build/classes/view/components/MapComponent.class" beforeDir="false" afterPath="$PROJECT_DIR$/frontend/build/classes/view/components/MapComponent.class" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/frontend/build/classes/view/components/SideMenuComponent$1.class" beforeDir="false" afterPath="$PROJECT_DIR$/frontend/build/classes/view/components/SideMenuComponent$1.class" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/frontend/build/classes/view/components/SideMenuComponent.class" beforeDir="false" afterPath="$PROJECT_DIR$/frontend/build/classes/view/components/SideMenuComponent.class" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/frontend/src/api/ApiClient.java" beforeDir="false" afterPath="$PROJECT_DIR$/frontend/src/api/ApiClient.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/frontend/src/view/AdicionarAlerta.form" beforeDir="false" afterPath="$PROJECT_DIR$/frontend/src/view/AdicionarAlertaView.form" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/frontend/src/view/AdicionarAlerta.java" beforeDir="false" afterPath="$PROJECT_DIR$/frontend/src/view/AdicionarAlertaView.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/frontend/src/view/AlertPage.form" beforeDir="false" afterPath="$PROJECT_DIR$/frontend/src/view/AlertPageView.form" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/frontend/src/view/AlertPage.java" beforeDir="false" afterPath="$PROJECT_DIR$/frontend/src/view/AlertPageView.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/frontend/src/view/MainView.form" beforeDir="false" afterPath="$PROJECT_DIR$/frontend/src/view/MainView.form" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/frontend/src/view/MainView.java" beforeDir="false" afterPath="$PROJECT_DIR$/frontend/src/view/MainView.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/frontend/src/view/components/MapComponent.java" beforeDir="false" afterPath="$PROJECT_DIR$/frontend/src/view/components/MapComponent.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/frontend/src/view/components/SideMenuComponent.java" beforeDir="false" afterPath="$PROJECT_DIR$/frontend/src/view/components/SideMenuComponent.java" afterDir="false" />
+    </list>
+    <option name="SHOW_DIALOG" value="false" />
+    <option name="HIGHLIGHT_CONFLICTS" value="true" />
+    <option name="HIGHLIGHT_NON_ACTIVE_CHANGELIST" value="false" />
+    <option name="LAST_RESOLUTION" value="IGNORE" />
+  </component>
+  <component name="FileTemplateManagerImpl">
+    <option name="RECENT_TEMPLATES">
+      <list>
+        <option value="Class" />
+      </list>
+    </option>
+  </component>
+  <component name="Git.Settings">
+    <option name="RECENT_GIT_ROOT_PATH" value="$PROJECT_DIR$" />
+  </component>
+  <component name="GitHubPullRequestSearchHistory">{
+  &quot;lastFilter&quot;: {
+    &quot;state&quot;: &quot;OPEN&quot;,
+    &quot;assignee&quot;: &quot;saulopietro&quot;
+  }
+}</component>
+  <component name="GithubPullRequestsUISettings">{
+  &quot;selectedUrlAndAccountId&quot;: {
+    &quot;url&quot;: &quot;https://github.com/ddecry/RainMapViewer.git&quot;,
+    &quot;accountId&quot;: &quot;e1133871-1cd3-4e29-adc6-c7ac6c79f031&quot;
+  }
+}</component>
+  <component name="ProjectColorInfo">{
+  &quot;associatedIndex&quot;: 0
+}</component>
+  <component name="ProjectId" id="2yFqjgSgvJapYjxDSOAQhdHU5bK" />
+  <component name="ProjectLevelVcsManager">
+    <ConfirmationsSetting value="2" id="Add" />
+  </component>
+  <component name="ProjectViewState">
+    <option name="hideEmptyMiddlePackages" value="true" />
+    <option name="showLibraryContents" value="true" />
+  </component>
+  <component name="PropertiesComponent"><![CDATA[{
+  "keyToString": {
+    "Application.RainMapApplication.executor": "Run",
+    "RunOnceActivity.ShowReadmeOnStart": "true",
+    "RunOnceActivity.git.unshallow": "true",
+    "SHARE_PROJECT_CONFIGURATION_FILES": "true",
+    "git-widget-placeholder": "saulo",
+    "ignore.virus.scanning.warn.message": "true",
+    "kotlin-language-version-configured": "true",
+    "last_opened_file_path": "C:/Users/saulo/Desktop/RainMap/RainMapViewer/backend/RainMap/src/main/resources"
+  }
+}]]></component>
+  <component name="RecentsManager">
+    <key name="CopyFile.RECENT_KEYS">
+      <recent name="C:\Users\saulo\Desktop\RainMap\RainMapViewer\backend\RainMap\src\main\resources" />
+    </key>
+    <key name="CopyClassDialog.RECENTS_KEY">
+      <recent name="com.RainMap.RainMap.repositories" />
+      <recent name="com.RainMap.RainMap.services" />
+      <recent name="com.RainMap.RainMap.controllers" />
+      <recent name="com.RainMap.RainMap.models" />
+    </key>
+  </component>
+  <component name="RunManager">
+    <configuration name="RainMapApplication" type="Application" factoryName="Application" temporary="true" nameIsGenerated="true">
+      <option name="MAIN_CLASS_NAME" value="com.RainMap.RainMap.RainMapApplication" />
+      <module name="RainMap" />
+      <extension name="coverage">
+        <pattern>
+          <option name="PATTERN" value="com.RainMap.RainMap.*" />
+          <option name="ENABLED" value="true" />
+        </pattern>
+      </extension>
+      <method v="2">
+        <option name="Make" enabled="true" />
+      </method>
+    </configuration>
+    <recent_temporary>
+      <list>
+        <item itemvalue="Application.RainMapApplication" />
+      </list>
+    </recent_temporary>
+  </component>
+  <component name="SpellCheckerSettings" RuntimeDictionaries="0" Folders="0" CustomDictionaries="0" DefaultDictionary="application-level" UseSingleDictionary="true" transferred="true" />
+  <component name="TaskManager">
+    <task active="true" id="Default" summary="Default task">
+      <changelist id="99d586f9-2d68-486e-9e53-118be754441d" name="Changes" comment="" />
+      <created>1749440805744</created>
+      <option name="number" value="Default" />
+      <option name="presentableId" value="Default" />
+      <updated>1749440805744</updated>
+    </task>
+    <servers />
+  </component>
+</project>
