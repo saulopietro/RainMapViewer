@@ -44,4 +44,8 @@ Este projeto foi desenvolvido integrando conhecimentos adquiridos nas seguintes 
 
 ## 👥 Integrantes do Grupo
 
-- [
+- https://github.com/NoKKziN
+- https://github.com/DanielVinicius2
+- https://github.com/ImGrooTT07
+- https://github.com/ddecry
+
