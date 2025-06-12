@@ -50,6 +50,6 @@ Este projeto foi desenvolvido integrando conhecimentos adquiridos nas seguintes 
 - [Daniel Vinicius]
 - [Luis Felipe]
 - [Davi Soares]  
-*(adicione os nomes ou links para os perfis no GitHub/LinkedIn)*
+
 
 
